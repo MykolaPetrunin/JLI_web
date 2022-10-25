@@ -1,0 +1,26 @@
+{
+  "trailingComma": "all",
+  "tabWidth": 2,
+  "semi": true,
+  "singleQuote": true,
+  "printWidth": 150,
+  "bracketSpacing": true,
+  "declaration-block-trailing-semicolon": "always",
+  "importOrder": [
+    "^@core/(.*)$",
+    "^@mui/(.*)$",
+    "^@api/(.*)$",
+    "^@hooks/(.*)$",
+    "^@assets/(.*)$",
+    "^@navigation/(.*)$",
+    "^@pages/(.*)$",
+    "^@modules/(.*)$",
+    "^@widgets/(.*)$",
+    "^@uikit/(.*)$",
+    "^@*/(.*)$",
+    "^@/(.*)$",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
+}

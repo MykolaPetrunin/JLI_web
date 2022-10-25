@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "types": ["@types/jest", "node"]
+  },
+  "include": ["**/*.ts", "**/*.tsx", "src/custom.d.ts", "**/*.test.tsx", "@testing-library/jest-dom", "node_modules/jest-dom"],
+  "exclude": [
+    "src/__test__/"
+  ],
+  "extends": "./tsconfig.paths.json"
+}

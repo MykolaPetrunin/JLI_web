@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@api/*": ["./src/api/*"],
+      "@widgets/*": ["./src/widgets/*"],
+      "@uikit/*": ["./src/uikit/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@utils/*": ["./src/uikit/*"],
+      "@modules/*": ["./src/modules/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@navigation/*": ["./src/navigation/*"],
+      "@store/*": ["./src/store/*"]
+    }
+  }
+}
