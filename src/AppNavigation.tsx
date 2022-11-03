@@ -1,32 +1,40 @@
-import { useAuth0 } from '@auth0/auth0-react';
-import React, { FC } from 'react';
+import CurrentUserContext from '@store/currentUser/CurrentUserContext';
+import axios from 'axios';
+import React, { FC, useContext } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import { Button, CircularProgress } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 
-import useAxiosDefault from '@api/hooks/useAxiosDefault';
+import useAuth from '@hooks/useAuth/useAuth';
 
-import Auth from '@pages/auth/Auth';
+import AuthPage from '@pages/auth/AuthPage';
+import HomePage from '@pages/home/HomePage';
+import ProfilePage from '@pages/profile/ProfilePage';
+
+import AppPaths from '@/config/appPaths';
 
 const AppNavigation: FC = () => {
-  useAxiosDefault();
+  axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
 
-  const { user, isLoading, logout } = useAuth0();
+  useAuth();
+
+  const {
+    currentUserState: { isLoading, userId },
+  } = useContext(CurrentUserContext);
 
   if (isLoading) {
     return <CircularProgress />;
   }
 
-  if (!user) return <Auth />;
+  if (!userId) return <AuthPage />;
 
   return (
-    <>
-      <Button onClick={() => logout({ returnTo: window.location.origin })}>Log Out</Button>
-      <div>
-        <img src={user.picture} alt={user.name} />
-        <h2>{user.name}</h2>
-        <p>{user.email}</p>
-      </div>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path={AppPaths.Home} element={<HomePage />} />
+        <Route path={AppPaths.Profile} element={<ProfilePage />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 

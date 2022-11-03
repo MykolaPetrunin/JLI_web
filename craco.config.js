@@ -14,7 +14,8 @@ module.exports = {
         ...pathsToModuleNameMapper(compilerOptions.paths, {
           prefix: '<rootDir>/',
         }),
-        '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': '<rootDir>/src/__test__/mocks/fileMock.js',
+        '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
+          '<rootDir>/src/__test__/mocks/fileMock.js',
       },
       testEnvironment: 'jsdom',
       transform: {
@@ -30,10 +31,11 @@ module.exports = {
       '@modules': path.resolve(__dirname, 'src/modules'),
       '@navigation': path.resolve(__dirname, 'src/navigation'),
       '@pages': path.resolve(__dirname, 'src/pages'),
-      '@uikit': path.resolve(__dirname, 'src/uikit'),
+      '@models': path.resolve(__dirname, 'src/models'),
+      '@atoms': path.resolve(__dirname, 'src/components/atoms'),
+      '@templates': path.resolve(__dirname, 'src/components/templates'),
       '@hooks': path.resolve(__dirname, 'src/hooks'),
       '@utils': path.resolve(__dirname, 'src/utils'),
-      '@widgets': path.resolve(__dirname, 'src/widgets'),
       '@store': path.resolve(__dirname, 'src/store'),
     },
     rules: [

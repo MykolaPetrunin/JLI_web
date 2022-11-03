@@ -4,13 +4,13 @@
     "paths": {
       "@/*": ["./src/*"],
       "@api/*": ["./src/api/*"],
+      "@models/*": ["./src/models/*"],
+      "@atoms/*": ["./src/components/atoms/*"],
+      "@templates/*": ["./src/components/templates/*"],
       "@widgets/*": ["./src/widgets/*"],
-      "@uikit/*": ["./src/uikit/*"],
       "@hooks/*": ["./src/hooks/*"],
       "@utils/*": ["./src/uikit/*"],
-      "@modules/*": ["./src/modules/*"],
       "@pages/*": ["./src/pages/*"],
-      "@navigation/*": ["./src/navigation/*"],
       "@store/*": ["./src/store/*"]
     }
   }

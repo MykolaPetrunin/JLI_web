@@ -1,4 +1,5 @@
 import { Auth0Provider } from '@auth0/auth0-react';
+import CurrentUserProvider from '@store/currentUser/CurrentUserProvider';
 import React, { FC, PropsWithChildren } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
@@ -24,7 +25,7 @@ const AppProviders: FC<PropsWithChildren> = ({ children }) => {
           redirectUri={window.location.origin}
           audience="JustLearnIt"
         >
-          {children}
+          <CurrentUserProvider>{children}</CurrentUserProvider>
         </Auth0Provider>
       </QueryClientProvider>
     </ThemeProvider>

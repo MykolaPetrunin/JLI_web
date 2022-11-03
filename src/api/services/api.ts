@@ -12,7 +12,10 @@ interface PostRequestParams<BodyDataType = unknown> {
   headers?: AxiosRequestHeaders;
 }
 
-type ApiMutation = <Response, RequestParams>({ url, body }: PostRequestParams<RequestParams>) => Promise<ApiRes<Response>>;
+type ApiMutation = <Response, RequestParams>({
+  url,
+  body,
+}: PostRequestParams<RequestParams>) => Promise<ApiRes<Response>>;
 type ApiDeleteMutation = <Response>({ url }: PostRequestParams) => Promise<ApiRes<Response>>;
 
 interface ApiType {
@@ -24,11 +27,11 @@ interface ApiType {
 
 const Api: ApiType = {
   get: async (url) => {
-    const response = await axios.get<ApiRes<Response>, AxiosResponse>(url);
+    const { data, status } = await axios.get<ApiRes<Response>, AxiosResponse>(url);
 
     return {
-      data: response.data.data,
-      status: response.status,
+      data,
+      status,
     };
   },
   post: async ({ url, body }) => {
@@ -51,10 +54,10 @@ const Api: ApiType = {
     };
   },
   patch: async ({ url, body }) => {
-    const response = await axios.patch<ApiRes<Response>, AxiosResponse>(url, body);
+    const { data, status } = await axios.patch<ApiRes<Response>, AxiosResponse>(url, body);
     return {
-      data: response.data,
-      status: response.status,
+      data,
+      status,
     };
   },
 };
