@@ -1,4 +1,4 @@
-import axios, { AxiosRequestHeaders, AxiosResponse } from 'axios';
+import axios, { AxiosResponse, RawAxiosRequestHeaders } from 'axios';
 
 interface ApiRes<T> {
   data: T;
@@ -9,7 +9,7 @@ interface ApiRes<T> {
 interface PostRequestParams<BodyDataType = unknown> {
   url: string;
   body?: BodyDataType;
-  headers?: AxiosRequestHeaders;
+  headers?: Partial<RawAxiosRequestHeaders>;
 }
 
 type ApiMutation = <Response, RequestParams>({
@@ -23,6 +23,7 @@ interface ApiType {
   post: ApiMutation;
   remove: ApiDeleteMutation;
   patch: ApiMutation;
+  put: ApiMutation;
 }
 
 const Api: ApiType = {
@@ -55,6 +56,13 @@ const Api: ApiType = {
   },
   patch: async ({ url, body }) => {
     const { data, status } = await axios.patch<ApiRes<Response>, AxiosResponse>(url, body);
+    return {
+      data,
+      status,
+    };
+  },
+  put: async ({ url, body }) => {
+    const { data, status } = await axios.put<ApiRes<Response>, AxiosResponse>(url, body);
     return {
       data,
       status,

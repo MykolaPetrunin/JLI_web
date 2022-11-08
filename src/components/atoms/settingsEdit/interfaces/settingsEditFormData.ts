@@ -1,8 +1,9 @@
-interface UserSettings {
+interface SettingsEditFormData {
   isWordTranslation: boolean;
   isTranslationWord: boolean;
   isTyped: boolean;
   repeatCount: number;
+  wordsPerDay: number;
 }
 
-export default UserSettings;
+export default SettingsEditFormData;

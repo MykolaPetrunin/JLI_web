@@ -1,14 +1,9 @@
-import React, { FC } from 'react';
-
-interface SettingsProps {
+interface Settings {
   isWordTranslation: boolean;
   isTranslationWord: boolean;
   isTyped: boolean;
   repeatCount: number;
+  wordsPerDay: number;
 }
-
-const Settings: FC<SettingsProps> = () => {
-  return <></>;
-};
 
 export default Settings;

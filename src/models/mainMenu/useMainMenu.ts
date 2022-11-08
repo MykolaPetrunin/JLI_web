@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import menuItems from '@hooks/useManMenu/config/menuItems';
+import menuItems from '@models/mainMenu/config/menuItems';
 
 import MainMenuItem from '@atoms/mainMenu/interfaces/mainMenuItem';
 
@@ -20,7 +20,11 @@ const useMainMenu: () => UseMainMenuRes = () => {
   const value = useMemo<number>(() => {
     if (pathname === AppPaths.Home) return 0;
 
-    return menuItems.findIndex(({ href }) => href.startsWith(pathname));
+    return menuItems.findIndex(({ href }) => {
+      if (href === AppPaths.Home) return false;
+
+      return pathname.startsWith(href);
+    });
   }, [pathname]);
 
   const onChange = (index: number) => {

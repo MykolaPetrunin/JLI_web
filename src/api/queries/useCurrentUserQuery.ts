@@ -4,7 +4,7 @@ import ApiPaths from '@api/config/apiPaths';
 import Res from '@api/interfaces/res';
 import Api from '@api/services/api';
 
-import User from '@models/users/useCurrentUser/interfaces/user';
+import User from '@models/currentUser/interfaces/user';
 
 interface UseUserSettingsQueryProps {
   userId: string;

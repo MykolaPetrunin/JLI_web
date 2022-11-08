@@ -1,20 +1,24 @@
 import React, { FC } from 'react';
 
-import useMainMenu from '@hooks/useManMenu/useMainMenu';
+import useCollectionsMenu from '@models/collectionsMenu/useCollectionsMenu';
+import useMainMenu from '@models/mainMenu/useMainMenu';
 
 import MainPageTemplate from '@templates/mainPageTemplate/MainPageTemplate';
 
 import Header from '@atoms/header/Header';
 import MainMenu from '@atoms/mainMenu/MainMenu';
+import Tabs from '@atoms/tabs/Tabs';
 
-const HomePage: FC = () => {
+const MyCollectionsPage: FC = () => {
   const mainMenuProps = useMainMenu();
+  const collectionTabsProps = useCollectionsMenu();
 
   return (
     <MainPageTemplate header={<Header />} footer={<MainMenu {...mainMenuProps} />}>
-      Home page
+      <Tabs {...collectionTabsProps} />
+      MyCollectionsPage
     </MainPageTemplate>
   );
 };
 
-export default HomePage;
+export default MyCollectionsPage;

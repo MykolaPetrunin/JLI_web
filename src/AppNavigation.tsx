@@ -5,11 +5,14 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { CircularProgress } from '@mui/material';
 
-import useAuth from '@hooks/useAuth/useAuth';
+import useAuth from '@models/auth/useAuth';
 
-import AuthPage from '@pages/auth/AuthPage';
-import HomePage from '@pages/home/HomePage';
-import ProfilePage from '@pages/profile/ProfilePage';
+import AuthPage from '@pages/AuthPage';
+import CollectionsPage from '@pages/CollectionsPage';
+import HomePage from '@pages/HomePage';
+import MyCollectionsPage from '@pages/MyCollectionsPage';
+import ProfilePage from '@pages/ProfilePage';
+import SettingsPage from '@pages/SettingsPage';
 
 import AppPaths from '@/config/appPaths';
 
@@ -33,6 +36,9 @@ const AppNavigation: FC = () => {
       <Routes>
         <Route path={AppPaths.Home} element={<HomePage />} />
         <Route path={AppPaths.Profile} element={<ProfilePage />} />
+        <Route path={AppPaths.Settings} element={<SettingsPage />} />
+        <Route path={AppPaths.Collections} element={<CollectionsPage />} />
+        <Route path={AppPaths.MyCollections} element={<MyCollectionsPage />} />
       </Routes>
     </BrowserRouter>
   );
