@@ -33,6 +33,7 @@ module.exports = {
       '@pages': path.resolve(__dirname, 'src/pages'),
       '@models': path.resolve(__dirname, 'src/models'),
       '@atoms': path.resolve(__dirname, 'src/components/atoms'),
+      '@molecules': path.resolve(__dirname, 'src/components/molecules'),
       '@templates': path.resolve(__dirname, 'src/components/templates'),
       '@hooks': path.resolve(__dirname, 'src/hooks'),
       '@utils': path.resolve(__dirname, 'src/utils'),

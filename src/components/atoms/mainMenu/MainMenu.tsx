@@ -6,7 +6,7 @@ import MainMenuItem from './interfaces/mainMenuItem';
 
 interface MainMenuProps {
   config: MainMenuItem[];
-  value: number;
+  value: number | false;
   onChange: (value: number) => void;
 }
 

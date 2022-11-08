@@ -9,7 +9,7 @@ const collectionsMenuItems: TabItem[] = [
   },
   {
     label: 'Мої колекції',
-    href: AppPaths.MyCollections,
+    href: AppPaths.CollectionsMy,
   },
 ];
 

@@ -9,6 +9,7 @@ import useAuth from '@models/auth/useAuth';
 
 import AuthPage from '@pages/AuthPage';
 import CollectionsPage from '@pages/CollectionsPage';
+import CreateCollectionPage from '@pages/CreateCollectionPage';
 import HomePage from '@pages/HomePage';
 import MyCollectionsPage from '@pages/MyCollectionsPage';
 import ProfilePage from '@pages/ProfilePage';
@@ -38,7 +39,8 @@ const AppNavigation: FC = () => {
         <Route path={AppPaths.Profile} element={<ProfilePage />} />
         <Route path={AppPaths.Settings} element={<SettingsPage />} />
         <Route path={AppPaths.Collections} element={<CollectionsPage />} />
-        <Route path={AppPaths.MyCollections} element={<MyCollectionsPage />} />
+        <Route path={AppPaths.CollectionsCreate} element={<CreateCollectionPage />} />
+        <Route path={AppPaths.CollectionsMy} element={<MyCollectionsPage />} />
       </Routes>
     </BrowserRouter>
   );

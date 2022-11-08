@@ -3,7 +3,8 @@ const AppPaths = {
   Profile: '/profile',
   Settings: '/profile/settings',
   Collections: '/collections',
-  MyCollections: '/collections/my',
+  CollectionsCreate: '/create-collection',
+  CollectionsMy: '/collections/my',
 };
 
 export default AppPaths;

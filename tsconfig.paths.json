@@ -6,6 +6,7 @@
       "@api/*": ["./src/api/*"],
       "@models/*": ["./src/models/*"],
       "@atoms/*": ["./src/components/atoms/*"],
+      "@molecules/*": ["./src/components/molecules/*"],
       "@templates/*": ["./src/components/templates/*"],
       "@widgets/*": ["./src/widgets/*"],
       "@hooks/*": ["./src/hooks/*"],
