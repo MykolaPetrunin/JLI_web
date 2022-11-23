@@ -1,31 +1,41 @@
 import React, { FC } from 'react';
-
-import { Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 import useCollection from '@models/collection/useCollection';
 import useCollectionsMenu from '@models/collectionsMenu/useCollectionsMenu';
 import useMainMenu from '@models/mainMenu/useMainMenu';
 
-import MainPageTemplate from '@templates/mainPageTemplate/MainPageTemplate';
+import useCollectionsPage from '@pages/hooks/collections/useCollectionsPage';
 
-import CreateCollectionButton from '@atoms/createCollectionButton/CreateCollectionButton';
-import Header from '@atoms/header/Header';
-import MainMenu from '@atoms/mainMenu/MainMenu';
-import Tabs from '@atoms/tabs/Tabs';
+import CollectionPageTemplate from '@templates/collectionPageTemplate/CollectionPageTemplate';
+
+import AppPaths from '@/config/appPaths';
 
 const MyCollectionsPage: FC = () => {
+  const navigate = useNavigate();
+
   const mainMenuProps = useMainMenu();
   const collectionTabsProps = useCollectionsMenu();
-  const { goToCreateCollectionsPage } = useCollection({});
+  const { collections, fetchCollections, isCollectionsLoading } = useCollection({ isMy: true });
+
+  const { shareCollection, openCollection } = useCollectionsPage({
+    fetchCollections,
+  });
+
+  const createCollection = () => {
+    navigate(AppPaths.CollectionsCreate);
+  };
 
   return (
-    <MainPageTemplate header={<Header />} footer={<MainMenu {...mainMenuProps} />}>
-      <Box display="flex" justifyContent="center" my={2}>
-        <CreateCollectionButton click={goToCreateCollectionsPage} />
-      </Box>
-      <Tabs {...collectionTabsProps} />
-      MyCollectionsPage
-    </MainPageTemplate>
+    <CollectionPageTemplate
+      collections={collections}
+      openCollection={openCollection}
+      collectionTabsProps={collectionTabsProps}
+      isCollectionsLoading={isCollectionsLoading}
+      createCollection={createCollection}
+      shareCollection={shareCollection}
+      mainMenuProps={mainMenuProps}
+    />
   );
 };
 

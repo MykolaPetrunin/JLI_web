@@ -11,7 +11,6 @@ interface UseUpdateSettingsMutationRes {
 }
 
 interface UseUpdateSettingsMutationProps {
-  userId: string;
   settings: Settings;
 }
 
@@ -21,9 +20,9 @@ const useUpdateSettingsMutation: () => UseMutationResult<
   UseUpdateSettingsMutationProps
 > = () => {
   return useMutation(
-    async ({ userId, settings }): Promise<UseUpdateSettingsMutationRes> => {
+    async ({ settings }): Promise<UseUpdateSettingsMutationRes> => {
       const res = await Api.put<Res<Settings>, Settings>({
-        url: ApiPaths.updateSettings(userId),
+        url: ApiPaths.SettingsUpdate,
         body: settings,
       });
 

@@ -17,7 +17,6 @@ interface UseUpdateUserMutationRes {
 }
 
 interface UseUpdateUserMutationProps {
-  userId: string;
   body: UpdateUserBody;
 }
 
@@ -27,9 +26,9 @@ const useUpdateUserMutation: () => UseMutationResult<
   UseUpdateUserMutationProps
 > = () => {
   return useMutation(
-    async ({ userId, body }): Promise<UseUpdateUserMutationRes> => {
+    async ({ body }): Promise<UseUpdateUserMutationRes> => {
       const res = await Api.patch<Res<User>, UpdateUserBody>({
-        url: ApiPaths.updateUser(userId),
+        url: ApiPaths.UserUpdate,
         body,
       });
 

@@ -23,7 +23,7 @@ const useUploadImageMutation: () => UseMutationResult<
       bodyFormData.append('file', image);
 
       const res = await Api.post<Res<UseUploadImageMutationRes>, FormData>({
-        url: ApiPaths.uploadImage,
+        url: ApiPaths.ImageUpload,
         body: bodyFormData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });

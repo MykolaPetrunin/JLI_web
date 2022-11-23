@@ -1,5 +1,4 @@
-import CurrentUserContext from '@store/currentUser/CurrentUserContext';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import useUpdateSettingsMutation from '@api/mutations/useUpdateSettingsMutation';
 import useSettingsQuery from '@api/queries/useSettingsQuery';
@@ -18,16 +17,11 @@ const useSettings: () => UseSettingsRes = () => {
 
   const { mutateAsync: updateSettingsMutation, isLoading: isUpdating } =
     useUpdateSettingsMutation();
-  const {
-    currentUserState: { userId },
-  } = useContext(CurrentUserContext);
 
-  const { data, isLoading } = useSettingsQuery({ userId: userId || '' });
+  const { data, isLoading } = useSettingsQuery();
 
   const updateSettings = async (val: Settings): Promise<Settings> => {
-    if (!userId) return val;
-
-    const res = await updateSettingsMutation({ userId, settings: val });
+    const res = await updateSettingsMutation({ settings: val });
 
     setSettings(res.settings);
 

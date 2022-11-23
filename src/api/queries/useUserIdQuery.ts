@@ -30,7 +30,7 @@ const useUserIdQuery: (props: UseUserIdQueryProps) => UseQueryResult<UseUserIdQu
     ['UserIdQuery'],
     async () => {
       const res = await Api.post<Res<string>, UserIdQueryBody>({
-        url: ApiPaths.getUserId,
+        url: ApiPaths.UserIdGet,
         body: {
           email,
           firstName,

@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { ThemeProvider } from '@mui/material';
 
-import mainTheme from '@/theme/mainTheme';
+import useAppTheme from '@/theme/useAppTheme';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -16,8 +16,9 @@ const queryClient = new QueryClient({
 });
 
 const AppProviders: FC<PropsWithChildren> = ({ children }) => {
+  const theme = useAppTheme();
   return (
-    <ThemeProvider theme={mainTheme}>
+    <ThemeProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
         <Auth0Provider
           domain={process.env.REACT_APP_AUTH0_DOMAIN || ''}

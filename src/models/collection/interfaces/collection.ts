@@ -1,10 +1,17 @@
+import Word from '@models/collection/interfaces/word';
+
 interface Collection {
+  id: string;
   name: string;
-  words: string;
-  user?: string;
   isPrivate: boolean;
-  like: number;
-  disLike: number;
+  wordsCount?: number;
+  liked?: boolean;
+  user?: {
+    picture: string;
+    name: string;
+    id: string;
+  };
+  words?: Word[];
 }
 
 export default Collection;

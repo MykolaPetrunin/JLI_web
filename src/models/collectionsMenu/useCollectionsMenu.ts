@@ -7,7 +7,7 @@ import TabItem from '@atoms/tabs/interfaces/tabItem';
 
 import AppPaths from '@/config/appPaths';
 
-interface UseCollectionsMenuRes {
+export interface UseCollectionsMenuRes {
   config: TabItem[];
   value: number;
   onChange: (value: number) => void;

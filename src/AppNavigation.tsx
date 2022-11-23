@@ -8,6 +8,7 @@ import { CircularProgress } from '@mui/material';
 import useAuth from '@models/auth/useAuth';
 
 import AuthPage from '@pages/AuthPage';
+import CollectionPage from '@pages/CollectionPage';
 import CollectionsPage from '@pages/CollectionsPage';
 import CreateCollectionPage from '@pages/CreateCollectionPage';
 import HomePage from '@pages/HomePage';
@@ -41,6 +42,7 @@ const AppNavigation: FC = () => {
         <Route path={AppPaths.Collections} element={<CollectionsPage />} />
         <Route path={AppPaths.CollectionsCreate} element={<CreateCollectionPage />} />
         <Route path={AppPaths.CollectionsMy} element={<MyCollectionsPage />} />
+        <Route path={AppPaths.Collection} element={<CollectionPage />} />
       </Routes>
     </BrowserRouter>
   );

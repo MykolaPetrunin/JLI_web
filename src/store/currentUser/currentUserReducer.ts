@@ -12,6 +12,11 @@ const currentUserReducer: CurrentUserReducerType = (state, action) => {
         userId: action.payload,
         isLoading: false,
       };
+    case actionTypes.SetCurrentUser:
+      return {
+        ...state,
+        user: action.payload,
+      };
     case actionTypes.SetCurrentUserLoadingState:
       return {
         ...state,

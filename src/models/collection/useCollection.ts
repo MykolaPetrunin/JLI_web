@@ -1,53 +1,80 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
+import useCreateCollectionMutation from '@api/mutations/useCreateCollection';
+import useCollectionQuery from '@api/queries/useCollectionQuery';
 import useCollectionsQuery from '@api/queries/useCollectionsQuery';
 
 import Collection from '@models/collection/interfaces/collection';
-
-import AppPaths from '@/config/appPaths';
+import CreateCollectionInput from '@models/collection/interfaces/createCollectionInput';
 
 interface UseCollectionRes {
+  collection?: Collection;
   collections: Collection[];
-  fetchCollections: () => void;
-  createCollection: (val: Collection) => Promise<Collection>;
-  goToCreateCollectionsPage: () => void;
+  createCollection: (val: CreateCollectionInput) => Promise<Collection>;
+  fetchCollections: () => Promise<Collection[]>;
+  fetchCollection: () => Promise<Collection | undefined>;
+  isCollectionsLoading: boolean;
+  isCollectionLoading: boolean;
+  isCollectionCreating: boolean;
+  isUnauthorized: boolean;
 }
 
 interface UseCollectionProps {
-  isMultiple?: boolean;
+  collectionId?: string;
+  isMy?: boolean;
 }
 
-const useCollection: (props: UseCollectionProps) => UseCollectionRes = ({ isMultiple = false }) => {
-  const navigate = useNavigate();
+const useCollection: (props: UseCollectionProps) => UseCollectionRes = ({
+  isMy = false,
+  collectionId,
+}) => {
   const [collections, setCollections] = useState<Collection[]>([]);
-  const [isMultipleEnabled, setIsMultipleEnabled] = useState<boolean>(isMultiple);
+  const [collection, setCollection] = useState<Collection | undefined>();
+  const [isUnauthorized, setIsUnauthorized] = useState<boolean>(false);
 
-  const { data } = useCollectionsQuery({ isEnabled: isMultipleEnabled });
+  const { refetch: reFetchCollections, isFetching: isCollectionsLoading } = useCollectionsQuery({
+    isMy,
+  });
+  const { refetch: reFetchCollection, isFetching: isCollectionLoading } = useCollectionQuery({
+    collectionId: collectionId || '',
+  });
 
-  useEffect(() => {
-    if (!data?.collections) return;
+  const { mutateAsync: createCollectionMutation, isLoading: isCollectionCreating } =
+    useCreateCollectionMutation();
 
-    setCollections(data.collections);
-  }, [data]);
+  const fetchCollections = async (): Promise<Collection[]> => {
+    const res = await reFetchCollections();
 
-  const fetchCollections = () => {
-    setIsMultipleEnabled(true);
+    setCollections(res.data?.collections || []);
+
+    return res.data?.collections || [];
   };
 
-  const createCollection = async (val: Collection): Promise<Collection> => {
-    return val;
+  const fetchCollection = async (): Promise<Collection | undefined> => {
+    const res = await reFetchCollection();
+
+    setIsUnauthorized(!!res.data?.unauthorized);
+    setCollection(res.data?.collection);
+
+    return res.data?.collection;
   };
 
-  const goToCreateCollectionsPage = () => {
-    navigate(AppPaths.CollectionsCreate);
+  const createCollection = async (val: CreateCollectionInput): Promise<Collection> => {
+    const res = await createCollectionMutation({ ...val });
+
+    return res.collection;
   };
 
   return {
+    collection,
     collections,
-    fetchCollections,
     createCollection,
-    goToCreateCollectionsPage,
+    fetchCollection,
+    fetchCollections,
+    isCollectionsLoading,
+    isCollectionCreating,
+    isCollectionLoading,
+    isUnauthorized,
   };
 };
 

@@ -12,9 +12,9 @@ interface MainMenuProps {
 
 const MainMenu: FC<MainMenuProps> = ({ config, value, onChange }) => {
   return (
-    <Tabs value={value} variant="fullWidth" onChange={(e, val) => onChange(val)}>
-      {config.map(({ Icon, href }) => (
-        <Tab key={href} icon={<Icon />} />
+    <Tabs value={value} variant="fullWidth">
+      {config.map(({ Icon, href }, index) => (
+        <Tab key={href} onClick={() => onChange(index)} icon={<Icon />} />
       ))}
     </Tabs>
   );

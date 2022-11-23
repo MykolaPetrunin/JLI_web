@@ -6,21 +6,15 @@ import Api from '@api/services/api';
 
 import Settings from '@models/settings/interfaces/settings';
 
-interface UseSettingsQueryProps {
-  userId: string;
-}
-
 interface UseSettingsQueryRes {
   settings: Settings;
 }
 
-const useSettingsQuery: (props: UseSettingsQueryProps) => UseQueryResult<UseSettingsQueryRes> = ({
-  userId,
-}) => {
+const useSettingsQuery: () => UseQueryResult<UseSettingsQueryRes> = () => {
   return useQuery(
     ['UserSettingsQuery'],
     async () => {
-      const res = await Api.get<Res<Settings>>(`${ApiPaths.getSettings}?userId=${userId}`);
+      const res = await Api.get<Res<Settings>>(ApiPaths.SettingsGet);
 
       return {
         settings: res.data.data,

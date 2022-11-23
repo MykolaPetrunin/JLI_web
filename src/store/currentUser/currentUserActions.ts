@@ -2,11 +2,23 @@ import INIT_CURRENT_USER_STATE from '@store/currentUser/config/initCurrentUserSt
 import actionFn from '@store/utils/actionFn';
 import CurrentUserState from 'src/store/currentUser/interfaces/currentUserState';
 
+import User from '@models/currentUser/interfaces/user';
+
 export enum CurrentUserActionsTypes {
   SetCurrentUserId = 'SetCurrentUserId',
+  SetCurrentUser = 'SetCurrentUser',
   SetCurrentUserLoadingState = 'SetCurrentUserLoadingState',
   ResetCurrentUser = 'ResetCurrentUser',
 }
+
+export interface SetCurrentUserAction {
+  type: CurrentUserActionsTypes.SetCurrentUser;
+  payload: User;
+}
+
+export const setCurrentUser = actionFn<SetCurrentUserAction>(
+  CurrentUserActionsTypes.SetCurrentUser,
+);
 
 export interface SetCurrentUserIdAction {
   type: CurrentUserActionsTypes.SetCurrentUserId;
@@ -39,4 +51,5 @@ export const resetCurrentUser = (): ResetCurrentUserAction => ({
 export type CurrentUserActions =
   | SetCurrentUserIdAction
   | ResetCurrentUserAction
+  | SetCurrentUserAction
   | SetCurrentUserLoadingStateAction;

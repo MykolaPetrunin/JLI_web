@@ -24,6 +24,8 @@ const useAuth: () => void = () => {
 
   useEffect(() => {
     if (!data?.userId) return;
+
+    axios.defaults.headers.common.CurrentUserId = data.userId;
     dispatchCurrentUserState(setCurrentUserId(data.userId));
   }, [data]);
 

@@ -1,6 +1,8 @@
+import WordInputValue from '@atoms/wordInput/interfaces/WordInputValue';
+
 interface CollectionInputVal {
   name: string;
-  words: Array<{ translation: string; word: string; image?: string }>;
+  words: Array<WordInputValue>;
   isPrivate: boolean;
 }
 

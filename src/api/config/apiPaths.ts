@@ -1,11 +1,13 @@
 const ApiPaths = {
-  getCollections: '/api/collections',
-  getCurrentUser: '/api/users/current',
-  getSettings: '/api/users/settings',
-  getUserId: '/api/users/id',
-  updateSettings: (userId: string) => `/api/users/settings/${userId}`,
-  updateUser: (userId: string) => `/api/users/${userId}`,
-  uploadImage: '/api/images',
+  CollectionGet: '/api/collections',
+  CollectionsGet: '/api/collections',
+  CollectionsCreate: '/api/collections',
+  CurrentUserGet: '/api/users/current',
+  ImageUpload: '/api/images',
+  SettingsGet: '/api/users/me/settings',
+  SettingsUpdate: '/api/users/me/settings',
+  UserIdGet: '/api/users/id',
+  UserUpdate: '/api/users/me',
 };
 
 export default ApiPaths;

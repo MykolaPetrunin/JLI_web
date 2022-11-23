@@ -7,7 +7,7 @@ import MainMenuItem from '@atoms/mainMenu/interfaces/mainMenuItem';
 
 import AppPaths from '@/config/appPaths';
 
-interface UseMainMenuRes {
+export interface UseMainMenuRes {
   config: MainMenuItem[];
   value: number | false;
   onChange: (value: number) => void;
