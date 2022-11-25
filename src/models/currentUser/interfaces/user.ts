@@ -3,6 +3,7 @@ interface User {
   picture?: string;
   firstName?: string;
   lastName?: string;
+  collections?: string[];
 }
 
 export default User;

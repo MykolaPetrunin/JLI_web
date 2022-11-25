@@ -1,4 +1,5 @@
 import { useFormik } from 'formik';
+import { isEqual } from 'lodash';
 import React, { FC, MouseEvent, useEffect, useRef } from 'react';
 
 import { DeleteOutline } from '@mui/icons-material';
@@ -40,7 +41,7 @@ const WordInput: FC<WordInputProps> = ({ value, onChange, index, onDelete, touch
       isInit.current = false;
       return;
     }
-
+    if (isEqual(formik.values, value)) return;
     onChange(formik.values);
   }, [formik.values]);
 

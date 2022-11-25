@@ -3,6 +3,7 @@ import CurrentUserContext from '@store/currentUser/CurrentUserContext';
 import { setCurrentUser } from '@store/currentUser/currentUserActions';
 import { useContext, useEffect } from 'react';
 
+import useAddCollectionToStudyMutation from '@api/mutations/useAddCollectionToStudyMutation';
 import useUpdateUserMutation from '@api/mutations/useUpdateUserMutation';
 import useUploadImageMutation from '@api/mutations/useUploadImageMutation';
 import useCurrentUserQuery from '@api/queries/useCurrentUserQuery';
@@ -15,6 +16,8 @@ interface UseCurrentUserRes {
   fetchCurrentUser: () => Promise<void>;
   logout: () => void;
   updateUser: (val: Omit<User, 'email'>) => Promise<void>;
+  addCollectionToStudy: (collectionId: string) => Promise<void>;
+  isAddingCollectionToStudy: boolean;
 }
 
 const useCurrentUser: () => UseCurrentUserRes = () => {
@@ -26,6 +29,8 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
   const { logout } = useAuth0();
   const { mutateAsync: uploadImage } = useUploadImageMutation();
   const { mutateAsync: updateUserMutation } = useUpdateUserMutation();
+  const { mutateAsync: addCollectionToStudyMutation, isLoading: isAddingCollectionToStudy } =
+    useAddCollectionToStudyMutation();
 
   const { data: currentUserData, refetch: fetchCurrentUserQuery } = useCurrentUserQuery();
 
@@ -54,12 +59,18 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
     await fetchCurrentUserQuery({ fetching: true });
   };
 
+  const addCollectionToStudy = async (collectionId: string): Promise<void> => {
+    await addCollectionToStudyMutation({ collectionId });
+  };
+
   return {
     userId,
     logout,
     currentUser,
     updateUser,
     fetchCurrentUser,
+    addCollectionToStudy,
+    isAddingCollectionToStudy,
   };
 };
 

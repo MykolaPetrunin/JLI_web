@@ -17,7 +17,7 @@ const useAuth: () => void = () => {
   const { data } = useUserIdQuery({
     email: user?.email || '',
     picture: user?.picture,
-    firstName: user?.name,
+    firstName: user?.given_name,
     lastName: user?.family_name,
     isEnabled: !!user?.email && isHasToken,
   });

@@ -12,7 +12,7 @@ interface PostRequestParams<BodyDataType = unknown> {
   headers?: Partial<RawAxiosRequestHeaders>;
 }
 
-type ApiMutation = <Response, RequestParams>({
+type ApiMutation = <Response, RequestParams = unknown>({
   url,
   body,
 }: PostRequestParams<RequestParams>) => Promise<ApiRes<Response>>;

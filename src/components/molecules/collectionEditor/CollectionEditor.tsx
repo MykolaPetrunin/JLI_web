@@ -25,7 +25,14 @@ const CollectionEditor: FC<CollectionEditorProps> = ({ value, onSubmit }) => {
     validateOnChange: true,
     validationSchema: CollectionEditorValidationSchema,
     onSubmit: (val) => {
-      onSubmit(val);
+      onSubmit({
+        ...val,
+        words: val.words.map((item) => ({
+          word: item.word,
+          image: item.image,
+          translation: item.translation,
+        })),
+      });
     },
   });
 
@@ -87,7 +94,10 @@ const CollectionEditor: FC<CollectionEditorProps> = ({ value, onSubmit }) => {
               index={index + 1}
               touched={!!formik.touched.words}
               onChange={(val) => {
-                onWordChange(val, index);
+                onWordChange(
+                  { word: val.word, translation: val.translation, image: val.image },
+                  index,
+                );
               }}
               onDelete={formik.values.words.length > 5 ? () => removeWord(index) : undefined}
               value={word}
@@ -101,7 +111,7 @@ const CollectionEditor: FC<CollectionEditorProps> = ({ value, onSubmit }) => {
         </Grid>
         <Grid item xs={12} display="flex" alignItems="center" justifyContent="center">
           <Button type="submit" variant="contained" size="large" fullWidth>
-            Створити коллекцію
+            {value ? 'Оновити колекцію' : 'Створити колекцію'}
           </Button>
         </Grid>
       </Grid>

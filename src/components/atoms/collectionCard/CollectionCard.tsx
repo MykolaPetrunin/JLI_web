@@ -18,7 +18,7 @@ const CollectionCard: FC<CollectionCardProps> = ({ source, onLike, onClick, onSh
       <CardActionArea onClick={onClick}>
         <CardHeader
           title={source.name}
-          subheader={`Колекція містить ${source.wordsCount} слів`}
+          subheader={`${source.wordsCount} слів`}
           action={source.isPrivate && <LockPersonOutlined />}
           avatar={
             source.user && (

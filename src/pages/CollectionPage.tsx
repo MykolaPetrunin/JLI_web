@@ -1,8 +1,20 @@
-import React, { FC, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { isEqual } from 'lodash';
+import React, { FC, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import { CircularProgress, Grid, Typography } from '@mui/material';
+import { CloseRounded } from '@mui/icons-material';
+import {
+  Box,
+  CircularProgress,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  IconButton,
+  Typography,
+} from '@mui/material';
 
+import Collection from '@models/collection/interfaces/collection';
 import useCollection from '@models/collection/useCollection';
 import useCurrentUser from '@models/currentUser/useCurrentUser';
 import useMainMenu from '@models/mainMenu/useMainMenu';
@@ -13,56 +25,101 @@ import CollectionInfo from '@atoms/collectionInfo/CollectionInfo';
 import Header from '@atoms/header/Header';
 import MainMenu from '@atoms/mainMenu/MainMenu';
 
+import CollectionEditor from '@molecules/collectionEditor/CollectionEditor';
+import CollectionInputVal from '@molecules/collectionEditor/interfaces/collectionInputVal';
+
+import AppPaths from '@/config/appPaths';
+
 const CollectionPage: FC = () => {
+  const navigate = useNavigate();
+  const [collectionToEdit, setCollectionToEdit] = useState<Collection | undefined>();
+  const [isCollectionInStudy, setIsCollectionInStudy] = useState<boolean | undefined>();
+
   const { collectionId } = useParams<{ collectionId: 'collectionId' }>();
   const mainMenuProps = useMainMenu();
 
-  const { collection, isCollectionLoading, fetchCollection, isUnauthorized } = useCollection({
+  const {
+    collection,
+    isCollectionLoading,
+    fetchCollection,
+    isUnauthorized,
+    isCollectionCreating,
+    isCollectionUpdating,
+    isCollectionDeleting,
+    updateCollection,
+  } = useCollection({
     collectionId,
   });
-  const { userId: currentUserId } = useCurrentUser();
+  const { currentUser, fetchCurrentUser, addCollectionToStudy, isAddingCollectionToStudy } =
+    useCurrentUser();
 
   useEffect(() => {
     fetchCollection().then();
   }, []);
 
-  const isMyCollection = collection?.user?.id === currentUserId;
+  useEffect(() => {
+    if (!currentUser) {
+      fetchCurrentUser().then();
+      return;
+    }
+    if (!collectionId || !currentUser.collections) return;
+
+    setIsCollectionInStudy(currentUser.collections.includes(collectionId));
+  }, [currentUser, collectionId]);
+
+  const updateCol = async (newCollection: CollectionInputVal): Promise<void> => {
+    if (!collection) return;
+
+    const newVal = {
+      id: collection.id,
+      ...(collection.name !== newCollection.name ? { name: newCollection.name } : {}),
+      ...(collection.isPrivate !== newCollection.isPrivate
+        ? { isPrivate: newCollection.isPrivate }
+        : {}),
+      ...(!isEqual(collection.words, newCollection.words) ? { words: newCollection.words } : {}),
+    };
+
+    if (Object.keys(newVal).length === 1) return;
+
+    setCollectionToEdit(undefined);
+
+    await updateCollection(newVal);
+  };
+
+  const isLoading =
+    isCollectionLoading ||
+    isCollectionCreating ||
+    isCollectionUpdating ||
+    isCollectionDeleting ||
+    isAddingCollectionToStudy ||
+    isCollectionInStudy === undefined;
+
+  const isContentVisible = collection && !isLoading;
+  const isErrorVisible = !isUnauthorized && !collection && !isLoading;
+  const isPrivateError = !collection && isUnauthorized && !isLoading;
 
   return (
     <MainPageTemplate header={<Header />} footer={<MainMenu {...mainMenuProps} />}>
       <Grid container spacing={2} my={3}>
-        {!isCollectionLoading && collection && (
+        {isContentVisible && (
           <Grid item xs={12} m={3}>
             <CollectionInfo
               collection={collection}
-              onDelete={
-                isMyCollection
+              isInStudy={isCollectionInStudy}
+              onStartStudy={
+                !isCollectionInStudy
                   ? () => {
-                      console.log('delete');
+                      if (!collection?.id) return;
+                      addCollectionToStudy(collection.id).then(() => {
+                        navigate(AppPaths.Home);
+                      });
                     }
                   : undefined
               }
-              onEdit={
-                isMyCollection
-                  ? () => {
-                      console.log('edit');
-                    }
-                  : undefined
-              }
-              onCopy={
-                !isMyCollection
-                  ? () => {
-                      console.log('copy');
-                    }
-                  : undefined
-              }
-              onStartStudy={() => {
-                console.log('start study');
-              }}
             />
           </Grid>
         )}
-        {!isCollectionLoading && !collection && !isUnauthorized && (
+        {isErrorVisible && (
           <Grid
             item
             key="emptyState"
@@ -77,7 +134,7 @@ const CollectionPage: FC = () => {
             <Typography>Не знайшов такої колекції</Typography>
           </Grid>
         )}
-        {!isCollectionLoading && !collection && isUnauthorized && (
+        {isPrivateError && (
           <Grid
             item
             key="emptyState"
@@ -91,7 +148,7 @@ const CollectionPage: FC = () => {
             <Typography>Вибачте, але це приватна колекція</Typography>
           </Grid>
         )}
-        {isCollectionLoading && (
+        {isLoading && (
           <Grid
             item
             key="emptyState"
@@ -106,6 +163,35 @@ const CollectionPage: FC = () => {
           </Grid>
         )}
       </Grid>
+      <Dialog open={!!collectionToEdit} fullScreen>
+        {!!collectionToEdit && (
+          <>
+            <DialogTitle variant="h6">
+              Редагувати колекцію
+              <IconButton
+                aria-label="close"
+                onClick={() => setCollectionToEdit(undefined)}
+                sx={{
+                  position: 'absolute',
+                  right: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }}
+              >
+                <CloseRounded />
+              </IconButton>
+            </DialogTitle>
+            <DialogContent>
+              <Box mt={2}>
+                <CollectionEditor
+                  value={{ ...collectionToEdit, words: collectionToEdit.words || [] }}
+                  onSubmit={updateCol}
+                />
+              </Box>
+            </DialogContent>
+          </>
+        )}
+      </Dialog>
     </MainPageTemplate>
   );
 };

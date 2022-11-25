@@ -3,7 +3,6 @@ import React, { FC } from 'react';
 import { Box, CircularProgress, Grid, Typography } from '@mui/material';
 
 import Collection from '@models/collection/interfaces/collection';
-import { UseCollectionsMenuRes } from '@models/collectionsMenu/useCollectionsMenu';
 import { UseMainMenuRes } from '@models/mainMenu/useMainMenu';
 
 import MainPageTemplate from '@templates/mainPageTemplate/MainPageTemplate';
@@ -12,11 +11,9 @@ import CollectionCard from '@atoms/collectionCard/CollectionCard';
 import CreateCollectionButton from '@atoms/createCollectionButton/CreateCollectionButton';
 import Header from '@atoms/header/Header';
 import MainMenu from '@atoms/mainMenu/MainMenu';
-import Tabs from '@atoms/tabs/Tabs';
 
 interface CollectionPageTemplateProps {
   mainMenuProps: UseMainMenuRes;
-  collectionTabsProps: UseCollectionsMenuRes;
   createCollection?: () => void;
   collections: Collection[];
   isCollectionsLoading: boolean;
@@ -27,7 +24,6 @@ interface CollectionPageTemplateProps {
 const CollectionPageTemplate: FC<CollectionPageTemplateProps> = ({
   mainMenuProps,
   createCollection,
-  collectionTabsProps,
   collections,
   isCollectionsLoading,
   openCollection,
@@ -40,7 +36,6 @@ const CollectionPageTemplate: FC<CollectionPageTemplateProps> = ({
           <CreateCollectionButton click={createCollection} />
         </Box>
       )}
-      <Tabs {...collectionTabsProps} />
       <Grid container spacing={2} px={2} my={2}>
         {collections.map((collection) => (
           <Grid item key={collection.id} xs={12}>
@@ -76,8 +71,8 @@ const CollectionPageTemplate: FC<CollectionPageTemplateProps> = ({
             flexDirection="column"
             p={3}
           >
-            <Typography>В вас нема колекцій</Typography>
-            <Typography>Нумо, створимо одну...</Typography>
+            <Typography>Схоже ви вивчаєте всі колекції</Typography>
+            <Typography>Ми активно працюємо над новими</Typography>
           </Grid>
         )}
       </Grid>

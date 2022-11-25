@@ -12,6 +12,7 @@ import Collection from '@models/collection/interfaces/collection';
 
 interface CollectionInfoProps {
   collection: Collection;
+  isInStudy: boolean;
   onEdit?: () => void;
   onCopy?: () => void;
   onStartStudy?: () => void;
@@ -22,6 +23,7 @@ const CollectionInfo: FC<CollectionInfoProps> = ({
   collection,
   onEdit,
   onStartStudy,
+  isInStudy,
   onDelete,
   onCopy,
 }) => {
@@ -30,9 +32,15 @@ const CollectionInfo: FC<CollectionInfoProps> = ({
       <Grid item xs={12}>
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <Typography variant="h4">{collection.name}</Typography>
-          <LockPersonOutlined />
+          {collection.isPrivate && <LockPersonOutlined />}
         </Box>
       </Grid>
+      {isInStudy && (
+        <Grid item xs={12}>
+          <Typography variant="h4">Ви вивчаєте цю колекцію</Typography>
+        </Grid>
+      )}
+
       <Grid item xs={4} display="flex" justifyContent="center">
         {onDelete && (
           <Button fullWidth color="error" variant="outlined" onClick={onDelete}>
@@ -52,7 +60,7 @@ const CollectionInfo: FC<CollectionInfoProps> = ({
           </Button>
         )}
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={12}>
         {onStartStudy && (
           <Button variant="contained" fullWidth onClick={onStartStudy}>
             Вивчати
