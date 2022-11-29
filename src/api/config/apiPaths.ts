@@ -12,6 +12,9 @@ const ApiPaths = {
   UserUpdate: '/api/users/me',
   UserStudyCollection: '/api/users/studyCollection',
   UserIsCollectionStudy: '/api/users/me',
+  UserWordSetNextStep: '/api/users/wordToNextStep',
+  UserWordSetKnown: '/api/users/wordToKnown',
+  UserWords: '/api/users/myWordsHeap',
 };
 
 export default ApiPaths;

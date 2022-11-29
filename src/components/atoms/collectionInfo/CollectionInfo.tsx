@@ -68,8 +68,8 @@ const CollectionInfo: FC<CollectionInfoProps> = ({
         )}
       </Grid>
       {collection.words &&
-        collection.words.map(({ word, id, translation }) => (
-          <Grid item xs={12} key={id}>
+        collection.words.map(({ word, translation }, index) => (
+          <Grid item xs={12} key={index}>
             <Card>
               <CardContent>
                 <Typography variant="body2" mb={1}>

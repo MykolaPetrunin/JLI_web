@@ -7,6 +7,7 @@
       "@models/*": ["./src/models/*"],
       "@atoms/*": ["./src/components/atoms/*"],
       "@molecules/*": ["./src/components/molecules/*"],
+      "@organisms/*": ["./src/components/organisms/*"],
       "@templates/*": ["./src/components/templates/*"],
       "@widgets/*": ["./src/widgets/*"],
       "@hooks/*": ["./src/hooks/*"],

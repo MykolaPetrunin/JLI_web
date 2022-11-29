@@ -12,7 +12,9 @@ import CollectionPage from '@pages/CollectionPage';
 import CollectionsPage from '@pages/CollectionsPage';
 import HomePage from '@pages/HomePage';
 import ProfilePage from '@pages/ProfilePage';
+import RepeatPage from '@pages/RepeatPage';
 import SettingsPage from '@pages/SettingsPage';
+import StudyPage from '@pages/StudyPage';
 
 import AppPaths from '@/config/appPaths';
 
@@ -43,6 +45,8 @@ const AppNavigation: FC = () => {
         <Route path={AppPaths.Settings} element={<SettingsPage />} />
         <Route path={AppPaths.Collections} element={<CollectionsPage />} />
         <Route path={AppPaths.Collection} element={<CollectionPage />} />
+        <Route path={AppPaths.Study} element={<StudyPage />} />
+        <Route path={AppPaths.Repeat} element={<RepeatPage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,26 +1,38 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import CurrentUserContext from '@store/currentUser/CurrentUserContext';
 import { setCurrentUser } from '@store/currentUser/currentUserActions';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import useAddCollectionToStudyMutation from '@api/mutations/useAddCollectionToStudyMutation';
+import useSetKnownMutation from '@api/mutations/useSetKnownMutation';
+import useSetWordNextStepMutation from '@api/mutations/useSetWordNextStepMutation';
 import useUpdateUserMutation from '@api/mutations/useUpdateUserMutation';
 import useUploadImageMutation from '@api/mutations/useUploadImageMutation';
 import useCurrentUserQuery from '@api/queries/useCurrentUserQuery';
+import useUserWordsHeapQuery from '@api/queries/useUserWordsHeapQuery';
 
+import Word from '@models/collection/interfaces/word';
 import User from '@models/currentUser/interfaces/user';
+import WordSteps from '@models/currentUser/interfaces/wordSteps';
+
+type UpdatedUser = Pick<User, 'picture' | 'firstName' | 'lastName'>;
 
 interface UseCurrentUserRes {
   userId?: string;
   currentUser?: User;
   fetchCurrentUser: () => Promise<void>;
   logout: () => void;
-  updateUser: (val: Omit<User, 'email'>) => Promise<void>;
+  updateUser: (val: UpdatedUser) => Promise<void>;
+  setKnownWord: (word: Word, currentStep: WordSteps, isKnown: boolean) => Promise<void>;
+  setWordNextStep: (word: Word, currentStep: WordSteps) => Promise<void>;
   addCollectionToStudy: (collectionId: string) => Promise<void>;
   isAddingCollectionToStudy: boolean;
+  isCurrentUserLoading: boolean;
+  wordsHeap: Word[];
 }
 
 const useCurrentUser: () => UseCurrentUserRes = () => {
+  const [wordsHeap, setWordsHeap] = useState<Word[]>([]);
   const {
     currentUserState: { userId, user: currentUser },
     dispatchCurrentUserState,
@@ -29,12 +41,21 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
   const { logout } = useAuth0();
   const { mutateAsync: uploadImage } = useUploadImageMutation();
   const { mutateAsync: updateUserMutation } = useUpdateUserMutation();
+  const { mutateAsync: setKnownMutation } = useSetKnownMutation();
+  const { mutateAsync: setWordNextStepMutation } = useSetWordNextStepMutation();
   const { mutateAsync: addCollectionToStudyMutation, isLoading: isAddingCollectionToStudy } =
     useAddCollectionToStudyMutation();
 
-  const { data: currentUserData, refetch: fetchCurrentUserQuery } = useCurrentUserQuery();
+  const { data: wordsData } = useUserWordsHeapQuery({ limit: 20 });
 
-  const updateUser = async (val: Omit<User, 'email'>): Promise<void> => {
+  const {
+    data: currentUserData,
+    refetch: fetchCurrentUserQuery,
+    isFetching: isCurrentUserFetching,
+    isLoading: isCurrentUserLoading,
+  } = useCurrentUserQuery();
+
+  const updateUser = async (val: UpdatedUser): Promise<void> => {
     let imageId = '';
 
     if (val.picture && val.picture !== currentUser?.picture) {
@@ -50,6 +71,12 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
   };
 
   useEffect(() => {
+    if (!wordsData?.words) return;
+
+    setWordsHeap(wordsData.words);
+  }, [wordsData]);
+
+  useEffect(() => {
     if (!currentUserData?.user) return;
 
     dispatchCurrentUserState(setCurrentUser(currentUserData.user));
@@ -63,6 +90,67 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
     await addCollectionToStudyMutation({ collectionId });
   };
 
+  const setKnownWord = async (
+    word: Word,
+    currentStep: WordSteps,
+    isKnown: boolean,
+  ): Promise<void> => {
+    if (!currentUser) return;
+
+    if (currentStep === 'wordsWordTranslation' && !isKnown) {
+      dispatchCurrentUserState(
+        setCurrentUser({
+          ...currentUser,
+          [currentStep]: [...currentUser[currentStep].filter(({ id }) => id !== word.id), word],
+        }),
+      );
+      return;
+    }
+
+    if (currentStep !== 'words') {
+      dispatchCurrentUserState(
+        setCurrentUser({
+          ...currentUser,
+          [currentStep]: [...currentUser[currentStep].filter(({ id }) => id !== word.id)],
+        }),
+      );
+    }
+
+    const res = await setKnownMutation({ isKnown, wordId: word.id, currentStep });
+    dispatchCurrentUserState(
+      setCurrentUser({
+        ...currentUser,
+        ...res.data.reduce((acc, { words, step }) => {
+          return { ...acc, [step]: words };
+        }, {}),
+      }),
+    );
+  };
+
+  const setWordNextStep = async (word: Word, currentStep: WordSteps): Promise<void> => {
+    if (!currentUser) return;
+
+    if (currentStep !== 'words') {
+      dispatchCurrentUserState(
+        setCurrentUser({
+          ...currentUser,
+          [currentStep]: [...currentUser[currentStep].filter(({ id }) => id !== word.id)],
+        }),
+      );
+    }
+
+    const res = await setWordNextStepMutation({ wordId: word.id, currentStep });
+
+    dispatchCurrentUserState(
+      setCurrentUser({
+        ...currentUser,
+        ...res.data.reduce((acc, { words, step }) => {
+          return { ...acc, [step]: words };
+        }, {}),
+      }),
+    );
+  };
+
   return {
     userId,
     logout,
@@ -71,6 +159,10 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
     fetchCurrentUser,
     addCollectionToStudy,
     isAddingCollectionToStudy,
+    isCurrentUserLoading: isCurrentUserFetching || isCurrentUserLoading,
+    wordsHeap,
+    setKnownWord,
+    setWordNextStep,
   };
 };
 

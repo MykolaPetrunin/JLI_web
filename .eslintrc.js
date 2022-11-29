@@ -19,7 +19,12 @@ module.exports = {
     },
   },
   plugins: ['@typescript-eslint', 'import'],
-  ignorePatterns: ['**/*.snap', 'frontend/custom.d.ts', 'frontend/src/assets/*.*', '**/*stories.tsx'],
+  ignorePatterns: [
+    '**/*.snap',
+    'frontend/custom.d.ts',
+    'frontend/src/assets/*.*',
+    '**/*stories.tsx',
+  ],
   rules: {
     'react/function-component-definition': [2, { namedComponents: 'arrow-function' }],
     'react/jsx-props-no-spreading': [0],
@@ -34,6 +39,9 @@ module.exports = {
       },
     ],
     'comma-dangle': ['error', 'always-multiline'],
+    'no-plusplus': 0,
+    'no-nested-ternary': 0,
+    'react/destructuring-assignment': 0,
     semi: ['warn', 'always'],
   },
   overrides: [

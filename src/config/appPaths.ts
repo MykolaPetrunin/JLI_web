@@ -6,6 +6,8 @@ const AppPaths = {
   Collections: '/collections',
   CollectionsCreate: '/create-collection',
   CollectionsMy: '/collections/my',
+  Study: '/study',
+  Repeat: '/repeat',
 };
 
 export default AppPaths;
