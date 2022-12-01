@@ -1,7 +1,7 @@
-import { UseQueryResult, useQuery } from 'react-query';
-
 import ApiPaths from '@api/config/apiPaths';
+import QueryRes from '@api/interfaces/queryRes';
 import Res from '@api/interfaces/res';
+import useQuery from '@api/queries/useQuery';
 import Api from '@api/services/api';
 
 interface UserIdQueryBody {
@@ -11,24 +11,13 @@ interface UserIdQueryBody {
   picture?: string;
 }
 
-interface UseUserIdQueryProps extends UserIdQueryBody {
-  isEnabled: boolean;
-}
-
 interface UseUserIdQueryRes {
   userId: string;
 }
 
-const useUserIdQuery: (props: UseUserIdQueryProps) => UseQueryResult<UseUserIdQueryRes> = ({
-  email,
-  firstName,
-  lastName,
-  picture,
-  isEnabled,
-}) => {
-  return useQuery(
-    ['UserIdQuery'],
-    async () => {
+const useUserIdQuery: () => QueryRes<UseUserIdQueryRes, UserIdQueryBody> = () => {
+  return useQuery<UseUserIdQueryRes, UserIdQueryBody>(
+    async ({ email, firstName, lastName, picture }) => {
       const res = await Api.post<Res<string>, UserIdQueryBody>({
         url: ApiPaths.UserIdGet,
         body: {
@@ -42,7 +31,6 @@ const useUserIdQuery: (props: UseUserIdQueryProps) => UseQueryResult<UseUserIdQu
         userId: res.data.data,
       };
     },
-    { retry: false, cacheTime: 0, enabled: isEnabled },
   );
 };
 

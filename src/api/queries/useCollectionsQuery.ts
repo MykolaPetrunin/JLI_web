@@ -1,8 +1,8 @@
-import { UseQueryResult, useQuery } from 'react-query';
-
 import ApiPaths from '@api/config/apiPaths';
 import CollectionQueryRes from '@api/interfaces/collectionQueryRes';
+import QueryRes from '@api/interfaces/queryRes';
 import Res from '@api/interfaces/res';
+import useQuery from '@api/queries/useQuery';
 import Api from '@api/services/api';
 import resToCollection from '@api/utils/resToCollection';
 
@@ -16,22 +16,19 @@ interface UseCollectionsQueryRes {
   collections: Collection[];
 }
 
-const useCollectionsQuery: (
-  props: UseCollectionsQueryProps,
-) => UseQueryResult<UseCollectionsQueryRes> = ({ isMy = false }) => {
-  return useQuery(
-    ['UseCollectionsQuery'],
-    async (): Promise<UseCollectionsQueryRes> => {
-      const res = await Api.get<Res<CollectionQueryRes[]>>(
-        `${ApiPaths.CollectionsGet}${isMy ? '?isMy=true' : ''}`,
-      );
+const useCollectionsQuery: () => QueryRes<
+  UseCollectionsQueryRes,
+  UseCollectionsQueryProps
+> = () => {
+  return useQuery<UseCollectionsQueryRes, UseCollectionsQueryProps>(async ({ isMy }) => {
+    const res = await Api.get<Res<CollectionQueryRes[]>>(
+      `${ApiPaths.CollectionsGet}${isMy ? '?isMy=true' : ''}`,
+    );
 
-      return {
-        collections: res.data.data.map(resToCollection),
-      };
-    },
-    { retry: false, cacheTime: 0, enabled: false },
-  );
+    return {
+      collections: res.data.data.map(resToCollection),
+    };
+  });
 };
 
 export default useCollectionsQuery;

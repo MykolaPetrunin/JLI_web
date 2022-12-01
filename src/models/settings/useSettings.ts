@@ -18,7 +18,7 @@ const useSettings: () => UseSettingsRes = () => {
   const { mutateAsync: updateSettingsMutation, isLoading: isUpdating } =
     useUpdateSettingsMutation();
 
-  const { data, isLoading } = useSettingsQuery();
+  const { fetch: fetchSettingsQuery, isLoading } = useSettingsQuery();
 
   const updateSettings = async (val: Settings): Promise<Settings> => {
     const res = await updateSettingsMutation({ settings: val });
@@ -29,9 +29,10 @@ const useSettings: () => UseSettingsRes = () => {
   };
 
   useEffect(() => {
-    if (!data?.settings) return;
-    setSettings(data.settings);
-  }, [data]);
+    fetchSettingsQuery({}).then((res) => {
+      setSettings(res.settings);
+    });
+  }, []);
 
   return {
     settings,

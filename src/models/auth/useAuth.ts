@@ -14,20 +14,21 @@ const useAuth: () => void = () => {
 
   const [isHasToken, setIsHasToken] = useState<boolean>(false);
   const { dispatchCurrentUserState } = useContext(CurrentUserContext);
-  const { data } = useUserIdQuery({
-    email: user?.email || '',
-    picture: user?.picture,
-    firstName: user?.given_name,
-    lastName: user?.family_name,
-    isEnabled: !!user?.email && isHasToken,
-  });
+  const { fetch: fetchUserId } = useUserIdQuery();
 
   useEffect(() => {
-    if (!data?.userId) return;
+    if (!user?.email || !isHasToken) return;
 
-    axios.defaults.headers.common.CurrentUserId = data.userId;
-    dispatchCurrentUserState(setCurrentUserId(data.userId));
-  }, [data]);
+    fetchUserId({
+      email: user?.email || '',
+      picture: user?.picture,
+      firstName: user?.given_name,
+      lastName: user?.family_name,
+    }).then((res) => {
+      axios.defaults.headers.common.CurrentUserId = res.userId;
+      dispatchCurrentUserState(setCurrentUserId(res.userId));
+    });
+  }, [isHasToken, user]);
 
   useEffect(() => {
     if (!user && isLoading) return;

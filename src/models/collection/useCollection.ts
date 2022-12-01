@@ -39,12 +39,8 @@ const useCollection: (props: UseCollectionProps) => UseCollectionRes = ({
   const [collection, setCollection] = useState<Collection | undefined>();
   const [isUnauthorized, setIsUnauthorized] = useState<boolean>(false);
 
-  const { refetch: reFetchCollections, isFetching: isCollectionsLoading } = useCollectionsQuery({
-    isMy,
-  });
-  const { refetch: reFetchCollection, isFetching: isCollectionLoading } = useCollectionQuery({
-    collectionId: collectionId || '',
-  });
+  const { isLoading: isCollectionsLoading, fetch: fetchCollectionsQuery } = useCollectionsQuery();
+  const { isLoading: isCollectionLoading, fetch: fetchCollectionQuery } = useCollectionQuery();
 
   const { mutateAsync: createCollectionMutation, isLoading: isCollectionCreating } =
     useCreateCollectionMutation();
@@ -54,20 +50,22 @@ const useCollection: (props: UseCollectionProps) => UseCollectionRes = ({
     useDeleteCollectionMutation();
 
   const fetchCollections = async (): Promise<Collection[]> => {
-    const res = await reFetchCollections();
+    const res = await fetchCollectionsQuery({ isMy });
 
-    setCollections(res.data?.collections || []);
+    setCollections(res.collections || []);
 
-    return res.data?.collections || [];
+    return res.collections || [];
   };
 
   const fetchCollection = async (): Promise<Collection | undefined> => {
-    const res = await reFetchCollection();
+    if (!collectionId) return undefined;
 
-    setIsUnauthorized(!!res.data?.unauthorized);
-    setCollection(res.data?.collection);
+    const res = await fetchCollectionQuery({ collectionId });
 
-    return res.data?.collection;
+    setIsUnauthorized(!!res.unauthorized);
+    setCollection(res.collection);
+
+    return res.collection;
   };
 
   const createCollection = async (val: CreateCollectionInput): Promise<Collection> => {

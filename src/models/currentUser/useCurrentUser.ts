@@ -46,14 +46,8 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
   const { mutateAsync: addCollectionToStudyMutation, isLoading: isAddingCollectionToStudy } =
     useAddCollectionToStudyMutation();
 
-  const { data: wordsData } = useUserWordsHeapQuery({ limit: 20 });
-
-  const {
-    data: currentUserData,
-    refetch: fetchCurrentUserQuery,
-    isFetching: isCurrentUserFetching,
-    isLoading: isCurrentUserLoading,
-  } = useCurrentUserQuery();
+  const { fetch: fetchUserWordsHeapQuery } = useUserWordsHeapQuery();
+  const { isLoading: isCurrentUserLoading, fetch: fetchCurrentUserQuery } = useCurrentUserQuery();
 
   const updateUser = async (val: UpdatedUser): Promise<void> => {
     let imageId = '';
@@ -71,19 +65,15 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
   };
 
   useEffect(() => {
-    if (!wordsData?.words) return;
-
-    setWordsHeap(wordsData.words);
-  }, [wordsData]);
-
-  useEffect(() => {
-    if (!currentUserData?.user) return;
-
-    dispatchCurrentUserState(setCurrentUser(currentUserData.user));
-  }, [currentUserData]);
+    fetchUserWordsHeapQuery({ limit: 20 }).then((res) => {
+      setWordsHeap(res.words);
+    });
+  }, []);
 
   const fetchCurrentUser = async (): Promise<void> => {
-    await fetchCurrentUserQuery({ fetching: true });
+    const res = await fetchCurrentUserQuery({});
+
+    dispatchCurrentUserState(setCurrentUser(res.user));
   };
 
   const addCollectionToStudy = async (collectionId: string): Promise<void> => {
@@ -159,7 +149,7 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
     fetchCurrentUser,
     addCollectionToStudy,
     isAddingCollectionToStudy,
-    isCurrentUserLoading: isCurrentUserFetching || isCurrentUserLoading,
+    isCurrentUserLoading,
     wordsHeap,
     setKnownWord,
     setWordNextStep,
