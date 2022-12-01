@@ -1,7 +1,7 @@
-import { UseMutationResult, useMutation } from 'react-query';
-
 import ApiPaths from '@api/config/apiPaths';
+import QueryRes from '@api/interfaces/queryRes';
 import Res from '@api/interfaces/res';
+import useQuery from '@api/queries/useQuery';
 import Api from '@api/services/api';
 
 import Collection from '@models/collection/interfaces/collection';
@@ -22,12 +22,11 @@ interface UseUpdateCollectionMutationProps {
   isPrivate?: boolean;
 }
 
-const useUpdateCollectionMutation: () => UseMutationResult<
+const useUpdateCollectionMutation: () => QueryRes<
   UseUpdateCollectionMutationRes,
-  unknown,
   UseUpdateCollectionMutationProps
 > = () => {
-  return useMutation(
+  return useQuery<UseUpdateCollectionMutationRes, UseUpdateCollectionMutationProps>(
     async (body): Promise<UseUpdateCollectionMutationRes> => {
       const res = await Api.patch<Res<Collection>, UseUpdateCollectionMutationProps>({
         url: `${ApiPaths.CollectionsUpdate}/${body.id}`,
@@ -38,7 +37,6 @@ const useUpdateCollectionMutation: () => UseMutationResult<
         collection: res.data.data,
       };
     },
-    { mutationKey: 'UseUpdateCollectionMutation' },
   );
 };
 

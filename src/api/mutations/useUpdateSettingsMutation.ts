@@ -1,7 +1,7 @@
-import { UseMutationResult, useMutation } from 'react-query';
-
 import ApiPaths from '@api/config/apiPaths';
+import QueryRes from '@api/interfaces/queryRes';
 import Res from '@api/interfaces/res';
+import useQuery from '@api/queries/useQuery';
 import Api from '@api/services/api';
 
 import Settings from '@models/settings/interfaces/settings';
@@ -14,12 +14,11 @@ interface UseUpdateSettingsMutationProps {
   settings: Settings;
 }
 
-const useUpdateSettingsMutation: () => UseMutationResult<
+const useUpdateSettingsMutation: () => QueryRes<
   UseUpdateSettingsMutationRes,
-  unknown,
   UseUpdateSettingsMutationProps
 > = () => {
-  return useMutation(
+  return useQuery<UseUpdateSettingsMutationRes, UseUpdateSettingsMutationProps>(
     async ({ settings }): Promise<UseUpdateSettingsMutationRes> => {
       const res = await Api.put<Res<Settings>, Settings>({
         url: ApiPaths.SettingsUpdate,
@@ -30,7 +29,6 @@ const useUpdateSettingsMutation: () => UseMutationResult<
         settings: res.data.data,
       };
     },
-    { mutationKey: 'ClaimEventMutation' },
   );
 };
 

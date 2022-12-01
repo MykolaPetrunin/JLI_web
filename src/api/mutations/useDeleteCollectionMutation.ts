@@ -1,7 +1,7 @@
-import { UseMutationResult, useMutation } from 'react-query';
-
 import ApiPaths from '@api/config/apiPaths';
+import QueryRes from '@api/interfaces/queryRes';
 import Res from '@api/interfaces/res';
+import useQuery from '@api/queries/useQuery';
 import Api from '@api/services/api';
 
 interface UseDeleteCollectionMutationRes {
@@ -12,12 +12,11 @@ interface UseDeleteCollectionMutationProps {
   collectionId: string;
 }
 
-const useDeleteCollectionMutation: () => UseMutationResult<
+const useDeleteCollectionMutation: () => QueryRes<
   UseDeleteCollectionMutationRes,
-  unknown,
   UseDeleteCollectionMutationProps
 > = () => {
-  return useMutation(
+  return useQuery<UseDeleteCollectionMutationRes, UseDeleteCollectionMutationProps>(
     async ({ collectionId }): Promise<UseDeleteCollectionMutationRes> => {
       const res = await Api.remove<Res<string>>({
         url: `${ApiPaths.CollectionDelete}/${collectionId}`,
@@ -25,7 +24,6 @@ const useDeleteCollectionMutation: () => UseMutationResult<
 
       return { collectionId: res.data.data };
     },
-    { mutationKey: 'UseDeleteCollectionMutation' },
   );
 };
 

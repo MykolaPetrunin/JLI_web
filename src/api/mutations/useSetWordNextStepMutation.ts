@@ -1,8 +1,8 @@
-import { UseMutationResult, useMutation } from 'react-query';
-
 import ApiPaths from '@api/config/apiPaths';
 import MoveWordsByStepsRes from '@api/interfaces/moveWordsByStepsRes';
+import QueryRes from '@api/interfaces/queryRes';
 import Res from '@api/interfaces/res';
+import useQuery from '@api/queries/useQuery';
 import Api from '@api/services/api';
 import resToWord from '@api/utils/resToWord';
 
@@ -18,12 +18,11 @@ interface UseSetWordNextStepMutationProps {
   wordId: string;
 }
 
-const useSetWordNextStepMutation: () => UseMutationResult<
+const useSetWordNextStepMutation: () => QueryRes<
   UseSetWordNextStepMutationRes,
-  unknown,
   UseSetWordNextStepMutationProps
 > = () => {
-  return useMutation(
+  return useQuery<UseSetWordNextStepMutationRes, UseSetWordNextStepMutationProps>(
     async (body): Promise<UseSetWordNextStepMutationRes> => {
       const res = await Api.post<Res<MoveWordsByStepsRes>, UseSetWordNextStepMutationProps>({
         url: ApiPaths.UserWordSetNextStep,
@@ -37,7 +36,6 @@ const useSetWordNextStepMutation: () => UseMutationResult<
         })),
       };
     },
-    { mutationKey: 'UseSetKnownMutation' },
   );
 };
 

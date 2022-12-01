@@ -1,7 +1,7 @@
-import { UseMutationResult, useMutation } from 'react-query';
-
 import ApiPaths from '@api/config/apiPaths';
+import QueryRes from '@api/interfaces/queryRes';
 import Res from '@api/interfaces/res';
+import useQuery from '@api/queries/useQuery';
 import Api from '@api/services/api';
 
 import Collection from '@models/collection/interfaces/collection';
@@ -20,12 +20,11 @@ interface UseCreateCollectionMutationProps {
   isPrivate: boolean;
 }
 
-const useCreateCollectionMutation: () => UseMutationResult<
+const useCreateCollectionMutation: () => QueryRes<
   UseCreateCollectionMutationRes,
-  unknown,
   UseCreateCollectionMutationProps
 > = () => {
-  return useMutation(
+  return useQuery<UseCreateCollectionMutationRes, UseCreateCollectionMutationProps>(
     async (body): Promise<UseCreateCollectionMutationRes> => {
       const res = await Api.post<Res<Collection>, UseCreateCollectionMutationProps>({
         url: ApiPaths.CollectionsCreate,
@@ -36,7 +35,6 @@ const useCreateCollectionMutation: () => UseMutationResult<
         collection: res.data.data,
       };
     },
-    { mutationKey: 'UseCreateCollectionMutation' },
   );
 };
 

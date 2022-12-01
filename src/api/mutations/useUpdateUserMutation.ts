@@ -1,7 +1,7 @@
-import { UseMutationResult, useMutation } from 'react-query';
-
 import ApiPaths from '@api/config/apiPaths';
+import QueryRes from '@api/interfaces/queryRes';
 import Res from '@api/interfaces/res';
+import useQuery from '@api/queries/useQuery';
 import Api from '@api/services/api';
 
 import User from '@models/currentUser/interfaces/user';
@@ -20,12 +20,11 @@ interface UseUpdateUserMutationProps {
   body: UpdateUserBody;
 }
 
-const useUpdateUserMutation: () => UseMutationResult<
+const useUpdateUserMutation: () => QueryRes<
   UseUpdateUserMutationRes,
-  unknown,
   UseUpdateUserMutationProps
 > = () => {
-  return useMutation(
+  return useQuery<UseUpdateUserMutationRes, UseUpdateUserMutationProps>(
     async ({ body }): Promise<UseUpdateUserMutationRes> => {
       const res = await Api.patch<Res<User>, UpdateUserBody>({
         url: ApiPaths.UserUpdate,
@@ -34,7 +33,6 @@ const useUpdateUserMutation: () => UseMutationResult<
 
       return { user: res.data.data };
     },
-    { mutationKey: 'UseUpdateUserMutation' },
   );
 };
 

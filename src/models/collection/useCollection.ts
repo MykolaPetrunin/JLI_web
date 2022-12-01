@@ -42,11 +42,11 @@ const useCollection: (props: UseCollectionProps) => UseCollectionRes = ({
   const { isLoading: isCollectionsLoading, fetch: fetchCollectionsQuery } = useCollectionsQuery();
   const { isLoading: isCollectionLoading, fetch: fetchCollectionQuery } = useCollectionQuery();
 
-  const { mutateAsync: createCollectionMutation, isLoading: isCollectionCreating } =
+  const { fetch: createCollectionMutation, isLoading: isCollectionCreating } =
     useCreateCollectionMutation();
-  const { mutateAsync: updateCollectionMutation, isLoading: isCollectionUpdating } =
+  const { fetch: updateCollectionMutation, isLoading: isCollectionUpdating } =
     useUpdateCollectionMutation();
-  const { mutateAsync: deleteCollectionMutation, isLoading: isCollectionDeleting } =
+  const { fetch: deleteCollectionMutation, isLoading: isCollectionDeleting } =
     useDeleteCollectionMutation();
 
   const fetchCollections = async (): Promise<Collection[]> => {

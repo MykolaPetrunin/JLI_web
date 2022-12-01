@@ -39,11 +39,11 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
   } = useContext(CurrentUserContext);
 
   const { logout } = useAuth0();
-  const { mutateAsync: uploadImage } = useUploadImageMutation();
-  const { mutateAsync: updateUserMutation } = useUpdateUserMutation();
-  const { mutateAsync: setKnownMutation } = useSetKnownMutation();
-  const { mutateAsync: setWordNextStepMutation } = useSetWordNextStepMutation();
-  const { mutateAsync: addCollectionToStudyMutation, isLoading: isAddingCollectionToStudy } =
+  const { fetch: uploadImage } = useUploadImageMutation();
+  const { fetch: updateUserMutation } = useUpdateUserMutation();
+  const { fetch: setKnownMutation } = useSetKnownMutation();
+  const { fetch: setWordNextStepMutation } = useSetWordNextStepMutation();
+  const { fetch: addCollectionToStudyMutation, isLoading: isAddingCollectionToStudy } =
     useAddCollectionToStudyMutation();
 
   const { fetch: fetchUserWordsHeapQuery } = useUserWordsHeapQuery();

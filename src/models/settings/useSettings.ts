@@ -15,8 +15,7 @@ interface UseSettingsRes {
 const useSettings: () => UseSettingsRes = () => {
   const [settings, setSettings] = useState<Settings | undefined>();
 
-  const { mutateAsync: updateSettingsMutation, isLoading: isUpdating } =
-    useUpdateSettingsMutation();
+  const { fetch: updateSettingsMutation, isLoading: isUpdating } = useUpdateSettingsMutation();
 
   const { fetch: fetchSettingsQuery, isLoading } = useSettingsQuery();
 
