@@ -49,8 +49,8 @@ const CollectionCreatorPage: FC = () => {
         <Grid item xs={12}>
           <form onSubmit={formik.handleSubmit}>
             <TextField
-              fullWidth
               maxRows={5}
+              fullWidth
               value={formik.values.source}
               name="source"
               onChange={formik.handleChange}
