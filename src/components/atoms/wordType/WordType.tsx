@@ -104,7 +104,11 @@ const WordType: FC<WordTypeProps> = ({ word, onError, onSuccess }) => {
           </Box>
         </Grid>
         <Grid item xs={12}>
-          <Button disabled={status !== undefined} onClick={() => setTypedWord('')}>
+          <Button
+            fullWidth
+            disabled={status !== undefined || !typedWord.length}
+            onClick={() => setTypedWord('')}
+          >
             Стерти
           </Button>
         </Grid>

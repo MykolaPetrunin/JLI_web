@@ -83,7 +83,7 @@ const WordSelect: FC<WordSelectProps> = ({
       </Box>
       <Grid container spacing={2}>
         {words.map((heapWord) => (
-          <Grid item xs={6} key={heapWord.id}>
+          <Grid item xs={6} key={heapWord.id} display="flex">
             <Button
               color={wordColor(heapWord)}
               variant="outlined"

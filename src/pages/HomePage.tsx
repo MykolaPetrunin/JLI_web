@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Button, CircularProgress, Grid } from '@mui/material';
+import { Button, CircularProgress, Grid, Typography } from '@mui/material';
 
 import useCollection from '@models/collection/useCollection';
 import useCurrentUser from '@models/currentUser/useCurrentUser';
@@ -72,30 +72,46 @@ const HomePage: FC = () => {
           )}
         </Grid>
       )}
-      {!isLoading &&
-        collections.map((collection) => (
-          <Grid item key={collection.id} xs={12}>
-            <CollectionCard
-              source={collection}
-              onClick={() => openCollection(collection)}
-              onShare={() => shareCollection(collection)}
-            />
+      <Grid container spacing={2} px={2} my={2}>
+        {!isLoading &&
+          collections.map((collection) => (
+            <Grid item key={collection.id} xs={12}>
+              <CollectionCard
+                source={collection}
+                onClick={() => openCollection(collection)}
+                onShare={() => shareCollection(collection)}
+              />
+            </Grid>
+          ))}
+        {!isLoading && !collections.length && (
+          <Grid
+            item
+            key="emptyState"
+            xs={12}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            flexDirection="column"
+            p={3}
+          >
+            <Typography>Ми активно працюємо над новими коллекціями для вас</Typography>
           </Grid>
-        ))}
-      {isLoading && (
-        <Grid
-          item
-          key="emptyState"
-          xs={12}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          flexDirection="column"
-          p={3}
-        >
-          <CircularProgress />
-        </Grid>
-      )}
+        )}
+        {isLoading && (
+          <Grid
+            item
+            key="emptyState"
+            xs={12}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            flexDirection="column"
+            p={3}
+          >
+            <CircularProgress />
+          </Grid>
+        )}
+      </Grid>
     </MainPageTemplate>
   );
 };

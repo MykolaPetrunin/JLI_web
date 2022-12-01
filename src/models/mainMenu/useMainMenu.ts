@@ -18,9 +18,9 @@ const useMainMenu: () => UseMainMenuRes = () => {
   const navigate = useNavigate();
 
   const value = useMemo<number | false>(() => {
-    if (pathname === AppPaths.Home) return false;
+    if (pathname === AppPaths.Home) return 0;
     const index = menuItems.findIndex(({ href }) => {
-      if (href === AppPaths.Home) return false;
+      if (href === AppPaths.Home) return 0;
 
       return pathname.startsWith(href);
     });

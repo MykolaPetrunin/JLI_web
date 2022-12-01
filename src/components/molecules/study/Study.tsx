@@ -10,6 +10,9 @@ import IsKnownWord from '@atoms/isKnownWord/IsKnownWord';
 import WordSelect from '@atoms/wordSelect/WordSelect';
 import WordType from '@atoms/wordType/WordType';
 
+import WordsAmountKeys from '@molecules/study/interfaces/wordsAmountKeys';
+import getWordsLengthConfig from '@molecules/study/utils/getWordsAmountConfig';
+
 interface StudyProps {
   wordsPerDay: number;
   wordsHeap: Word[];
@@ -21,12 +24,6 @@ interface StudyProps {
   onNextStep: (word: Word, currentStep: WordSteps) => void;
 }
 
-type WordsAmountKeys =
-  | 'wordsToKnow'
-  | 'wordsTranslationWord'
-  | 'wordsWordTranslation'
-  | 'wordsSpell';
-
 const Study: FC<StudyProps> = ({
   wordsPerDay,
   wordsToKnow,
@@ -37,20 +34,31 @@ const Study: FC<StudyProps> = ({
   onKnow,
   onNextStep,
 }) => {
-  const [wordsAmount, setWordsAmount] = useState<Record<WordsAmountKeys, number>>({
-    wordsToKnow: wordsToKnow.length > wordsPerDay ? wordsPerDay : wordsToKnow.length,
-    wordsTranslationWord:
-      wordsTranslationWord.length > wordsPerDay ? wordsPerDay : wordsTranslationWord.length,
-    wordsWordTranslation:
-      wordsWordTranslation.length > wordsPerDay ? wordsPerDay : wordsWordTranslation.length,
-    wordsSpell: wordsSpell.length > wordsPerDay ? wordsPerDay : wordsSpell.length,
-  });
+  const [wordsAmount, setWordsAmount] = useState<Record<WordsAmountKeys, number>>(
+    getWordsLengthConfig({
+      wordsSpellLength: wordsSpell.length,
+      wordsWordTranslationLength: wordsWordTranslation.length,
+      wordsPerDay,
+      wordsToKnowLength: wordsToKnow.length,
+      wordsTranslationWordLength: wordsTranslationWord.length,
+    }),
+  );
 
-  const decreaseWordAmount = (key: WordsAmountKeys) => {
-    setWordsAmount((prevState) => ({
-      ...prevState,
-      [key]: prevState[key] - 1,
-    }));
+  const decreaseWordAmount = (key: WordsAmountKeys | 'all') => {
+    setWordsAmount((prevState) =>
+      key === 'all'
+        ? (Object.keys(prevState) as WordsAmountKeys[]).reduce(
+            (acc, amountKey) => ({
+              ...acc,
+              [amountKey]: !prevState[amountKey] ? 0 : prevState[amountKey] - 1,
+            }),
+            prevState,
+          )
+        : {
+            ...prevState,
+            [key]: prevState[key] - 1,
+          },
+    );
   };
 
   useEffect(() => {
@@ -58,14 +66,13 @@ const Study: FC<StudyProps> = ({
 
     if (totalAmount) return;
 
-    const newWordsAmount = {
-      wordsToKnow: wordsToKnow.length > wordsPerDay ? wordsPerDay : wordsToKnow.length,
-      wordsTranslationWord:
-        wordsTranslationWord.length > wordsPerDay ? wordsPerDay : wordsTranslationWord.length,
-      wordsWordTranslation:
-        wordsWordTranslation.length > wordsPerDay ? wordsPerDay : wordsWordTranslation.length,
-      wordsSpell: wordsSpell.length > wordsPerDay ? wordsPerDay : wordsSpell.length,
-    };
+    const newWordsAmount = getWordsLengthConfig({
+      wordsSpellLength: wordsSpell.length,
+      wordsWordTranslationLength: wordsWordTranslation.length,
+      wordsPerDay,
+      wordsToKnowLength: wordsToKnow.length,
+      wordsTranslationWordLength: wordsTranslationWord.length,
+    });
 
     if (isEqual(newWordsAmount, wordsAmount)) return;
 
@@ -78,7 +85,7 @@ const Study: FC<StudyProps> = ({
         word={wordsToKnow[0]}
         onKnow={(word) => {
           onKnow(word, 'wordsToKnow', true);
-          decreaseWordAmount('wordsToKnow');
+          decreaseWordAmount('all');
         }}
         onStudy={(word) => {
           onNextStep(word, 'wordsToKnow');
