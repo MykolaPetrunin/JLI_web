@@ -5,6 +5,7 @@ const AppPaths = {
   Collection: '/collections/:collectionId',
   Collections: '/collections',
   CollectionsCreate: '/create-collection',
+  CollectionsCreator: '/collections-creator',
   CollectionsMy: '/collections/my',
   Study: '/study',
   Repeat: '/repeat',
