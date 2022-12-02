@@ -30,7 +30,9 @@
   },
   "scripts": {
     "start": "craco start",
+    "start:prod": "yarn build && yarn start:server",
     "build": "craco build",
+    "start:server": "node server.js",
     "test": "craco test --env=jsdom  --watchAll=false --config craco.config.js --coverage",
     "test:watch": "craco test --coverage --env=jsdom --verbose=false --watchAll",
     "clear_test": "craco test --clearCache",
@@ -126,9 +128,5 @@
   },
   "resolutions": {
     "react-test-renderer": "18.1.0"
-  },
-  "engines": {
-    "node": "v16.18.0",
-    "npm": "8.19.2"
   }
 }
