@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+const PORT = 3000;
 
 app.use(express.static('build'));
-app.listen(port,()=>console.log(''));
+app.listen(process.env.PORT || PORT, ()=>console.log('times gone'));
