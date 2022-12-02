@@ -29,7 +29,7 @@ const AppNavigation: FC = () => {
 
   if (isLoading) {
     return (
-      <Box display="flex" height="100%" alignItems="center" justifyContent="center">
+      <Box height="100%" display="flex" alignItems="center" justifyContent="center">
         <CircularProgress />
       </Box>
     );
