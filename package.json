@@ -29,7 +29,8 @@
     ]
   },
   "scripts": {
-    "start": "craco start",
+    "start": "yarn build && yarn start:server",
+    "start:craco": "craco start",
     "start:prod": "yarn build && yarn start:server",
     "build": "craco build",
     "start:server": "node server.js",
