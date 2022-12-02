@@ -126,5 +126,9 @@
   },
   "resolutions": {
     "react-test-renderer": "18.1.0"
+  },
+  "engines": {
+    "node": "v16.18.0",
+    "npm": "8.19.2"
   }
 }
