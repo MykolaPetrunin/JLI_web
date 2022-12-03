@@ -32,7 +32,6 @@
     "start": "node server.js",
     "start:craco": "craco start",
     "start:prod": "yarn build && yarn start:server",
-    "build": "craco build && yarn start:server",
     "start:server": "node server.js",
     "test": "craco test --env=jsdom  --watchAll=false --config craco.config.js --coverage",
     "test:watch": "craco test --coverage --env=jsdom --verbose=false --watchAll",
