@@ -18,24 +18,25 @@ const getWordsLengthConfig: (
   wordsTranslationWordLength,
 }) => {
   const wordsToKnow = wordsToKnowLength > wordsPerDay ? wordsPerDay : wordsToKnowLength;
-  const wordsTranslationWord =
-    wordsTranslationWordLength > wordsPerDay
-      ? wordsPerDay
-      : wordsToKnow > wordsTranslationWordLength
-      ? wordsToKnow
-      : wordsTranslationWordLength;
   const wordsWordTranslation =
     wordsWordTranslationLength > wordsPerDay
       ? wordsPerDay
-      : wordsTranslationWord > wordsWordTranslationLength
-      ? wordsTranslationWord
+      : wordsToKnow > wordsWordTranslationLength
+      ? wordsToKnow
       : wordsWordTranslationLength;
+
+  const wordsTranslationWord =
+    wordsTranslationWordLength > wordsPerDay
+      ? wordsPerDay
+      : wordsWordTranslation > wordsTranslationWordLength
+      ? wordsWordTranslation
+      : wordsTranslationWordLength;
 
   const wordsSpell =
     wordsSpellLength > wordsPerDay
       ? wordsPerDay
-      : wordsWordTranslation > wordsSpellLength
-      ? wordsWordTranslation
+      : wordsTranslationWord > wordsSpellLength
+      ? wordsTranslationWord
       : wordsSpellLength;
   return {
     wordsToKnow,
