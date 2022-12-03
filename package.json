@@ -29,8 +29,7 @@
     ]
   },
   "scripts": {
-    "start": "craco start",
-    "starts": "yarn build && yarn start:server",
+    "start": "yarn build && yarn start:server",
     "start:craco": "craco start",
     "start:prod": "yarn build && yarn start:server",
     "build": "craco build",
@@ -124,10 +123,8 @@
     "react-test-renderer": "^18.2.0",
     "storybook-addon-material-ui5": "^1.0.0",
     "storybook-addon-react-router-v6": "^0.2.1",
-    "ts-jest": "^29.0.3"
-  },
-  "devDependencies": {
-
+    "ts-jest": "^29.0.3",
+    "dotenv": "^16.0.3"
   },
   "resolutions": {
     "react-test-renderer": "18.1.0"
