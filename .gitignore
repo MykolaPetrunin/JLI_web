@@ -105,6 +105,3 @@ dist
 
 # Add IDE file to ignore
 .idea
-build
-build/*
-/build
