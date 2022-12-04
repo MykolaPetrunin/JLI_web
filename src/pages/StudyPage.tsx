@@ -1,7 +1,5 @@
-import { uniqBy } from 'lodash';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect } from 'react';
 
-import Word from '@models/collection/interfaces/word';
 import useCurrentUser from '@models/currentUser/useCurrentUser';
 import useMainMenu from '@models/mainMenu/useMainMenu';
 
@@ -15,35 +13,9 @@ import Study from '@molecules/study/Study';
 
 const StudyPage: FC = () => {
   const mainMenuProps = useMainMenu();
-  const [wordsHeap, setWordsHeap] = useState<Word[]>([]);
-  const {
-    currentUser,
-    fetchCurrentUser,
-    isCurrentUserLoading,
-    wordsHeap: currentUserWordsHeap,
-    setKnownWord,
-    setWordNextStep,
-  } = useCurrentUser();
 
-  useEffect(() => {
-    if (!currentUser) return;
-    const words = [
-      ...currentUser.wordsToKnow,
-      ...currentUser.wordsWordTranslation,
-      ...currentUser.wordsTranslationWord,
-      ...currentUser.wordsSpell,
-      ...currentUser.wordsRepeat,
-      ...currentUser.wordsRepeatWeek,
-      ...currentUser.wordsRepeatMonth,
-      ...currentUser.wordsRepeat3Month,
-      ...currentUser.wordsRepeat6Month,
-    ];
-    setWordsHeap(uniqBy([...wordsHeap, ...words], 'id'));
-  }, [currentUser]);
-
-  useEffect(() => {
-    setWordsHeap((prevState) => uniqBy([...prevState, ...currentUserWordsHeap], 'id'));
-  }, [currentUserWordsHeap]);
+  const { currentUser, fetchCurrentUser, isCurrentUserLoading, setKnownWord, setWordNextStep } =
+    useCurrentUser();
 
   useEffect(() => {
     if (!isCurrentUserLoading) {
@@ -59,7 +31,6 @@ const StudyPage: FC = () => {
           onNextStep={setWordNextStep}
           onKnow={setKnownWord}
           wordsPerDay={currentUser.settings.wordsPerDay}
-          wordsHeap={wordsHeap}
           wordsSpell={currentUser.wordsSpell}
           wordsToKnow={currentUser.wordsToKnow}
           wordsWordTranslation={currentUser.wordsWordTranslation}

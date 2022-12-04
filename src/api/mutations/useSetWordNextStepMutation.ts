@@ -32,7 +32,7 @@ const useSetWordNextStepMutation: () => QueryRes<
       return {
         data: res.data.data.map((item) => ({
           step: item.step,
-          words: item.words.map(resToWord),
+          words: item.words.map(resToWord()),
         })),
       };
     },

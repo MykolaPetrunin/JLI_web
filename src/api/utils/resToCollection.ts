@@ -7,7 +7,7 @@ const resToCollection = (source: CollectionQueryRes): Collection => ({
   ...source,
   // eslint-disable-next-line no-underscore-dangle
   id: source._id,
-  words: source.words?.map(resToWord),
+  words: source.words?.map(resToWord()),
   user: source.user && {
     ...source.user,
     // eslint-disable-next-line no-underscore-dangle

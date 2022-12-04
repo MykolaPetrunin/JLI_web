@@ -40,8 +40,8 @@ const getWordsLengthConfig: (
       : wordsSpellLength;
   return {
     wordsToKnow,
-    wordsTranslationWord,
     wordsWordTranslation,
+    wordsTranslationWord,
     wordsSpell,
   };
 };

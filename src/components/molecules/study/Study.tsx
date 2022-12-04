@@ -1,4 +1,4 @@
-import { isEqual, sampleSize } from 'lodash';
+import { isEqual } from 'lodash';
 import React, { FC, useEffect, useState } from 'react';
 
 import { Box, Typography } from '@mui/material';
@@ -15,7 +15,6 @@ import getWordsLengthConfig from '@molecules/study/utils/getWordsAmountConfig';
 
 interface StudyProps {
   wordsPerDay: number;
-  wordsHeap: Word[];
   wordsToKnow: Word[];
   wordsWordTranslation: Word[];
   wordsTranslationWord: Word[];
@@ -30,7 +29,6 @@ const Study: FC<StudyProps> = ({
   wordsTranslationWord,
   wordsWordTranslation,
   wordsSpell,
-  wordsHeap,
   onKnow,
   onNextStep,
 }) => {
@@ -44,7 +42,23 @@ const Study: FC<StudyProps> = ({
     }),
   );
 
-  const decreaseWordAmount = (key: WordsAmountKeys | 'all') => {
+  const decreaseWordAmount = (key: WordsAmountKeys | 'all', thisAndNext = false) => {
+    if (thisAndNext && key !== 'all') {
+      let flag = false;
+      setWordsAmount((prevState) =>
+        (Object.keys(prevState) as WordsAmountKeys[]).reduce((acc, amountKey) => {
+          if (amountKey === key) flag = true;
+
+          if (!flag) return acc;
+
+          return {
+            ...acc,
+            [amountKey]: !prevState[amountKey] ? 0 : prevState[amountKey] - 1,
+          };
+        }, prevState),
+      );
+      return;
+    }
     setWordsAmount((prevState) =>
       key === 'all'
         ? (Object.keys(prevState) as WordsAmountKeys[]).reduce(
@@ -98,13 +112,6 @@ const Study: FC<StudyProps> = ({
     return (
       <WordSelect
         word={wordsWordTranslation[0]}
-        heap={[
-          wordsWordTranslation[0],
-          ...sampleSize<Word>(
-            wordsHeap.filter(({ id }) => id !== wordsWordTranslation[0].id),
-            5,
-          ),
-        ]}
         questionKey="word"
         resKey="translation"
         onSuccess={(word) => {
@@ -113,7 +120,7 @@ const Study: FC<StudyProps> = ({
         }}
         onError={(word) => {
           onKnow(word, 'wordsWordTranslation', false);
-          decreaseWordAmount('wordsWordTranslation');
+          decreaseWordAmount('wordsWordTranslation', true);
         }}
       />
     );
@@ -122,13 +129,6 @@ const Study: FC<StudyProps> = ({
     return (
       <WordSelect
         word={wordsTranslationWord[0]}
-        heap={[
-          wordsTranslationWord[0],
-          ...sampleSize<Word>(
-            wordsHeap.filter(({ id }) => id !== wordsTranslationWord[0].id),
-            5,
-          ),
-        ]}
         questionKey="translation"
         resKey="word"
         onSuccess={(word) => {
@@ -137,7 +137,7 @@ const Study: FC<StudyProps> = ({
         }}
         onError={(word) => {
           onKnow(word, 'wordsTranslationWord', false);
-          decreaseWordAmount('wordsTranslationWord');
+          decreaseWordAmount('wordsTranslationWord', true);
         }}
       />
     );
@@ -152,7 +152,7 @@ const Study: FC<StudyProps> = ({
         }}
         onError={(word) => {
           onKnow(word, 'wordsSpell', false);
-          decreaseWordAmount('wordsSpell');
+          decreaseWordAmount('wordsSpell', true);
         }}
       />
     );

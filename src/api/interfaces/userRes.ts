@@ -11,6 +11,7 @@ interface UserRes
     | 'wordsWordTranslation'
     | 'wordsTranslationWord'
     | 'wordsSpell'
+    | 'wordsHeap'
     | 'wordsRepeat'
     | 'wordsRepeatWeek'
     | 'wordsRepeatMonth'
@@ -23,6 +24,8 @@ interface UserRes
   wordsTranslationWord: WordRes[];
   wordsSpell: WordRes[];
   wordsRepeat: WordRes[];
+  wordsHeap: WordRes[];
+  wordsRepeatHeap: WordRes[];
   wordsRepeatWeek: WordRes[];
   wordsRepeatMonth: WordRes[];
   wordsRepeat3Month: WordRes[];

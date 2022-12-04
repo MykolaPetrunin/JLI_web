@@ -12,6 +12,7 @@ interface User {
   wordsToKnow: Word[];
   wordsWordTranslation: Word[];
   wordsTranslationWord: Word[];
+  wordsHeap: Word[];
   wordsSpell: Word[];
   wordsRepeat: Word[];
   wordsRepeatWeek: Word[];

@@ -34,10 +34,11 @@ const WordType: FC<WordTypeProps> = ({ word, onError, onSuccess }) => {
   }, [typedWord]);
 
   const nextWord = () => {
+    const currentStatus = status;
     setLetters([]);
     setStatus(undefined);
     setTypedWord('');
-    if (typedWord === word.word.toLowerCase()) {
+    if (currentStatus === 'ok') {
       onSuccess(word);
       return;
     }

@@ -1,7 +1,7 @@
 type WordsAmountKeys =
   | 'wordsToKnow'
-  | 'wordsTranslationWord'
   | 'wordsWordTranslation'
+  | 'wordsTranslationWord'
   | 'wordsSpell';
 
 export default WordsAmountKeys;
