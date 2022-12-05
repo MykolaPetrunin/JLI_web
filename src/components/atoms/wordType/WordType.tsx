@@ -1,10 +1,11 @@
 import { sampleSize, shuffle } from 'lodash';
 import React, { FC, useEffect, useState } from 'react';
 
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Button, Grid, Typography, useTheme } from '@mui/material';
 
 import Word from '@models/collection/interfaces/word';
 
+import Speech from '@atoms/speech/Speech';
 import alphabet from '@atoms/wordType/config/alphabet';
 
 interface WordTypeProps {
@@ -14,6 +15,7 @@ interface WordTypeProps {
 }
 
 const WordType: FC<WordTypeProps> = ({ word, onError, onSuccess }) => {
+  const theme = useTheme();
   const [typedWord, setTypedWord] = useState<string>('');
   const [letters, setLetters] = useState<string[]>([]);
   const [status, setStatus] = useState<'err' | 'ok' | undefined>();
@@ -70,9 +72,13 @@ const WordType: FC<WordTypeProps> = ({ word, onError, onSuccess }) => {
       display="flex"
       flexDirection="column"
       justifyContent="center"
+      position="relative"
       px={2}
       py={3}
     >
+      <Box position="absolute" top={theme.spacing(3)} right={theme.spacing(1)}>
+        <Speech text={word.word} />
+      </Box>
       <Box
         flex="1"
         display="flex"
@@ -81,10 +87,10 @@ const WordType: FC<WordTypeProps> = ({ word, onError, onSuccess }) => {
         flexDirection="column"
         py={5}
       >
-        <Typography variant="h4" mb={3}>
+        <Typography variant="h4" textAlign="center" mb={3}>
           {word.translation}
         </Typography>
-        <Typography variant="h4" color={typedColor}>
+        <Typography variant="h4" textAlign="center" color={typedColor}>
           {typedWord || ' '}
         </Typography>
       </Box>
@@ -108,7 +114,9 @@ const WordType: FC<WordTypeProps> = ({ word, onError, onSuccess }) => {
           <Button
             fullWidth
             disabled={status !== undefined || !typedWord.length}
-            onClick={() => setTypedWord('')}
+            onClick={() =>
+              setTypedWord((prevState) => prevState.substring(0, prevState.length - 1))
+            }
           >
             Стерти
           </Button>

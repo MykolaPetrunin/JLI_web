@@ -1,8 +1,10 @@
 import React, { FC, useEffect, useState } from 'react';
 
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Button, Grid, Typography, useTheme } from '@mui/material';
 
 import Word from '@models/collection/interfaces/word';
+
+import Speech from '@atoms/speech/Speech';
 
 type Keys = 'translation' | 'word';
 
@@ -15,6 +17,8 @@ interface WordSelectProps {
 }
 
 const WordSelect: FC<WordSelectProps> = ({ word, questionKey, resKey, onError, onSuccess }) => {
+  const theme = useTheme();
+
   const [selectedWord, setSelectedWord] = useState<Word | undefined>();
   const [rightWord, setRightWord] = useState<Word | undefined>();
 
@@ -60,9 +64,13 @@ const WordSelect: FC<WordSelectProps> = ({ word, questionKey, resKey, onError, o
       display="flex"
       flexDirection="column"
       justifyContent="center"
+      position="relative"
       px={2}
       py={3}
     >
+      <Box position="absolute" top={theme.spacing(3)} right={theme.spacing(1)}>
+        <Speech text={word.word} />
+      </Box>
       <Box
         flex="1"
         display="flex"
@@ -78,7 +86,11 @@ const WordSelect: FC<WordSelectProps> = ({ word, questionKey, resKey, onError, o
           <Grid item xs={6} key={heapWord.id} display="flex">
             <Button
               color={wordColor(heapWord)}
-              variant="outlined"
+              variant={
+                heapWord.id === rightWord?.id || heapWord.id === selectedWord?.id
+                  ? 'contained'
+                  : 'outlined'
+              }
               size="small"
               fullWidth
               onClick={() => heapItemClickHandler(heapWord)}

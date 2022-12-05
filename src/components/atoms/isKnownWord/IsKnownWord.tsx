@@ -1,8 +1,10 @@
 import React, { FC } from 'react';
 
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Button, Grid, Typography, useTheme } from '@mui/material';
 
 import Word from '@models/collection/interfaces/word';
+
+import Speech from '@atoms/speech/Speech';
 
 interface IsKnownWordProps {
   word: Word;
@@ -11,15 +13,20 @@ interface IsKnownWordProps {
 }
 
 const IsKnownWord: FC<IsKnownWordProps> = ({ word, onStudy, onKnow }) => {
+  const theme = useTheme();
   return (
     <Box
       minHeight="100%"
       display="flex"
       flexDirection="column"
       justifyContent="center"
+      position="relative"
       px={2}
       py={3}
     >
+      <Box position="absolute" top={theme.spacing(3)} right={theme.spacing(1)}>
+        <Speech text={word.word} />
+      </Box>
       <Box
         flex="1"
         display="flex"
