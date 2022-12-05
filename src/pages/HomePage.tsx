@@ -94,7 +94,9 @@ const HomePage: FC = () => {
             flexDirection="column"
             p={3}
           >
-            <Typography>Ми активно працюємо над новими коллекціями для вас</Typography>
+            <Typography textAlign="center" variant="h4">
+              Ми активно працюємо над новими коллекціями для вас
+            </Typography>
           </Grid>
         )}
         {isLoading && (

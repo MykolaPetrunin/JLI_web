@@ -35,7 +35,7 @@ const IsKnownWord: FC<IsKnownWordProps> = ({ word, onStudy, onKnow }) => {
         flexDirection="column"
         py={5}
       >
-        <Typography variant="h4" mb={3}>
+        <Typography variant="h3" mb={3}>
           {word.word}
         </Typography>
         <Typography variant="h4">{word.translation}</Typography>
