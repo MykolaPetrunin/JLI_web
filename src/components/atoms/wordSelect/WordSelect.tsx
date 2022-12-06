@@ -79,7 +79,9 @@ const WordSelect: FC<WordSelectProps> = ({ word, questionKey, resKey, onError, o
         flexDirection="column"
         py={5}
       >
-        <Typography variant="h4">{word[questionKey]}</Typography>
+        <Typography variant="h4" textAlign="center">
+          {word[questionKey]}
+        </Typography>
       </Box>
       <Grid container spacing={2}>
         {(word.heap || []).map((heapWord) => (

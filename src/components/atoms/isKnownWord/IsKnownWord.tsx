@@ -35,10 +35,12 @@ const IsKnownWord: FC<IsKnownWordProps> = ({ word, onStudy, onKnow }) => {
         flexDirection="column"
         py={5}
       >
-        <Typography variant="h3" mb={3}>
+        <Typography variant="h3" textAlign="center" mb={3}>
           {word.word}
         </Typography>
-        <Typography variant="h4">{word.translation}</Typography>
+        <Typography variant="h4" textAlign="center">
+          {word.translation}
+        </Typography>
       </Box>
       <Grid container spacing={2}>
         <Grid item xs={6}>

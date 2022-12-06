@@ -87,7 +87,7 @@ const WordType: FC<WordTypeProps> = ({ word, onError, onSuccess }) => {
         flexDirection="column"
         py={5}
       >
-        <Typography variant="h4" textAlign="center" mb={3}>
+        <Typography variant="h3" textAlign="center" mb={3}>
           {word.translation}
         </Typography>
         <Typography variant="h4" textAlign="center" color={typedColor}>
