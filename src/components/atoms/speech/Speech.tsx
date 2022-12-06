@@ -12,11 +12,14 @@ const Speech: FC<SpeechProps> = ({ text }) => {
 
   useEffect(() => {
     const loadVoice = () => {
-      const voices = speechSynthesis.getVoices();
+      const voices = speechSynthesis.getVoices().filter(({ lang }) => lang === 'en-US');
 
-      console.log(voices);
+      const googleVoice = voices.find(({ voiceURI }) => voiceURI === 'Google US English');
+      const appleVoice = voices.find(
+        ({ voiceURI }) => voiceURI === 'com.apple.voice.compact.en-US.Samantha',
+      );
 
-      setVoice(voices.find(({ voiceURI }) => voiceURI === 'Google US English'));
+      setVoice(googleVoice || appleVoice || voices[0]);
     };
 
     loadVoice();
