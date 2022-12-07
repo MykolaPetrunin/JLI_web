@@ -56,7 +56,7 @@ const WordType: FC<WordTypeProps> = ({ word, onError, onSuccess }) => {
 
   const dontKnow = () => {
     setStatus('err');
-    formik.setFieldValue('err', word.word);
+    formik.setFieldValue('word', word.word);
   };
 
   return (
