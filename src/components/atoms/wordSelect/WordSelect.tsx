@@ -92,7 +92,6 @@ const WordSelect: FC<WordSelectProps> = ({ word, questionKey, resKey, onError, o
           <Grid item xs={6} key={heapWord.id} display="flex">
             <Button
               color={wordColor(heapWord)}
-              style={{ hyphens: 'auto', wordBreak: 'break-word' }}
               variant={
                 heapWord.id === rightWord?.id || heapWord.id === selectedWord?.id
                   ? 'contained'
@@ -102,7 +101,13 @@ const WordSelect: FC<WordSelectProps> = ({ word, questionKey, resKey, onError, o
               fullWidth
               onClick={() => heapItemClickHandler(heapWord)}
             >
-              {heapWord[resKey]}
+              <Typography
+                variant="button"
+                textTransform="none"
+                style={{ hyphens: 'auto', wordBreak: 'break-word' }}
+              >
+                {heapWord[resKey]}
+              </Typography>
             </Button>
           </Grid>
         ))}

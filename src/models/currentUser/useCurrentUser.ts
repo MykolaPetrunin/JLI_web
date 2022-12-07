@@ -81,8 +81,10 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
     const newUser = {
       ...currentUser,
       [currentStep]: currentUser[currentStep].filter(({ id }) => id !== word.id),
-      ...(isKnown ? {} : { wordsWordTranslation: [...currentUser.wordsWordTranslation, word] }),
     };
+    if (!isKnown) {
+      newUser.wordsWordTranslation = [...newUser.wordsWordTranslation, word];
+    }
 
     dispatchCurrentUserState(setCurrentUser(newUser));
 
@@ -97,12 +99,11 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
     const newUser = {
       ...currentUser,
       [currentStep]: currentUser[currentStep].filter(({ id }) => id !== word.id),
-      ...(nextStep !== 'words'
-        ? {
-            [nextStep]: [...currentUser[nextStep], word],
-          }
-        : {}),
     };
+
+    if (nextStep !== 'words') {
+      newUser[nextStep] = [...newUser[nextStep], word];
+    }
 
     dispatchCurrentUserState(setCurrentUser(newUser));
 
