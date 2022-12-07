@@ -94,7 +94,7 @@ const HomePage: FC = () => {
             flexDirection="column"
             p={3}
           >
-            <Typography textAlign="center" variant="h4">
+            <Typography textAlign="center" variant="h6">
               Ми активно працюємо над новими коллекціями для вас
             </Typography>
           </Grid>
