@@ -29,7 +29,7 @@ const WordType: FC<WordTypeProps> = ({ word, onError, onSuccess }) => {
   useEffect(() => {
     if (typedWord === undefined) return;
 
-    setStatus(typedWord.toLowerCase() === word.word.toLowerCase() ? 'ok' : 'err');
+    setStatus(typedWord.toLowerCase().trim() === word.word.toLowerCase().trim() ? 'ok' : 'err');
   }, [typedWord]);
 
   const reset = () => {
