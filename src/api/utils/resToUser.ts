@@ -1,3 +1,5 @@
+import { shuffle } from 'lodash';
+
 import UserRes from '@api/interfaces/userRes';
 import resToWord from '@api/utils/resToWord';
 
@@ -24,15 +26,15 @@ const resToUser = (source: UserRes): User => {
     collections: source.collections,
     picture: source.picture,
     wordsHeap,
-    wordsRepeat3Month: source.wordsRepeat3Month.map(resToWord()),
-    wordsRepeat6Month: source.wordsRepeat6Month.map(resToWord()),
-    wordsRepeatMonth: source.wordsRepeatMonth.map(resToWord()),
-    wordsRepeatWeek: source.wordsRepeatWeek.map(resToWord()),
-    wordsRepeat: source.wordsRepeat.map(resToWord()),
-    wordsToKnow: source.wordsToKnow.map(resToWord(wordsHeap)),
-    wordsWordTranslation: source.wordsWordTranslation.map(resToWord(wordsHeap)),
-    wordsTranslationWord: source.wordsTranslationWord.map(resToWord(wordsHeap)),
-    wordsSpell: source.wordsSpell.map(resToWord(wordsHeap)),
+    wordsRepeat3Month: shuffle(source.wordsRepeat3Month.map(resToWord())),
+    wordsRepeat6Month: shuffle(source.wordsRepeat6Month.map(resToWord())),
+    wordsRepeatMonth: shuffle(source.wordsRepeatMonth.map(resToWord())),
+    wordsRepeatWeek: shuffle(source.wordsRepeatWeek.map(resToWord())),
+    wordsRepeat: shuffle(source.wordsRepeat.map(resToWord())),
+    wordsToKnow: shuffle(source.wordsToKnow.map(resToWord(wordsHeap))),
+    wordsWordTranslation: shuffle(source.wordsWordTranslation.map(resToWord(wordsHeap))),
+    wordsTranslationWord: shuffle(source.wordsTranslationWord.map(resToWord(wordsHeap))),
+    wordsSpell: shuffle(source.wordsSpell.map(resToWord(wordsHeap))),
   };
 };
 
