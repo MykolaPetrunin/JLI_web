@@ -1,4 +1,4 @@
-import { sampleSize, shuffle } from 'lodash';
+import { useFormik } from 'formik';
 import React, { FC, useEffect, useState } from 'react';
 
 import { Box, Button, Grid, Typography, useTheme } from '@mui/material';
@@ -6,7 +6,7 @@ import { Box, Button, Grid, Typography, useTheme } from '@mui/material';
 import Word from '@models/collection/interfaces/word';
 
 import Speech from '@atoms/speech/Speech';
-import alphabet from '@atoms/wordType/config/alphabet';
+import WordTypeTextField from '@atoms/wordType/components/WordTypeTextField';
 
 interface WordTypeProps {
   word: Word;
@@ -16,30 +16,31 @@ interface WordTypeProps {
 
 const WordType: FC<WordTypeProps> = ({ word, onError, onSuccess }) => {
   const theme = useTheme();
-  const [typedWord, setTypedWord] = useState<string>('');
-  const [letters, setLetters] = useState<string[]>([]);
+  const [typedWord, setTypedWord] = useState<string | undefined>(undefined);
   const [status, setStatus] = useState<'err' | 'ok' | undefined>();
 
-  useEffect(() => {
-    const wordLetters = word.word.toLowerCase().split('');
-    const alphabetLetters = sampleSize<string>(
-      alphabet.filter((letter) => !wordLetters.includes(letter)),
-      wordLetters.length,
-    );
-    setLetters(shuffle<string>([...wordLetters, ...alphabetLetters]));
-  }, [word]);
+  const formik = useFormik<{ word: string }>({
+    initialValues: { word: '' },
+    onSubmit: (val) => {
+      setTypedWord(val.word);
+    },
+  });
 
   useEffect(() => {
-    if (typedWord.length < word.word.length || !!status) return;
+    if (typedWord === undefined) return;
 
-    setStatus(typedWord === word.word.toLowerCase() ? 'ok' : 'err');
+    setStatus(typedWord.toLowerCase() === word.word.toLowerCase() ? 'ok' : 'err');
   }, [typedWord]);
+
+  const reset = () => {
+    formik.resetForm();
+    setTypedWord(undefined);
+    setStatus(undefined);
+  };
 
   const nextWord = () => {
     const currentStatus = status;
-    setLetters([]);
-    setStatus(undefined);
-    setTypedWord('');
+    reset();
     if (currentStatus === 'ok') {
       onSuccess(word);
       return;
@@ -49,25 +50,19 @@ const WordType: FC<WordTypeProps> = ({ word, onError, onSuccess }) => {
   };
 
   const know = () => {
-    setLetters([]);
-    setStatus(undefined);
-    setTypedWord('');
+    reset();
     onSuccess(word);
   };
 
   const dontKnow = () => {
     setStatus('err');
-    setTypedWord(word.word.toLowerCase());
-  };
-
-  const typedColor = (): string => {
-    if (!status) return 'text.primary';
-    if (status === 'err') return 'error.main';
-    return 'success.main';
+    formik.setFieldValue('err', word.word);
   };
 
   return (
     <Box
+      component="form"
+      onSubmit={formik.handleSubmit}
       minHeight="100%"
       display="flex"
       flexDirection="column"
@@ -87,39 +82,25 @@ const WordType: FC<WordTypeProps> = ({ word, onError, onSuccess }) => {
         flexDirection="column"
         py={5}
       >
-        <Typography variant="h3" textAlign="center" mb={3}>
+        <Typography
+          variant="h3"
+          style={{ hyphens: 'auto', wordBreak: 'break-word' }}
+          textAlign="center"
+          mb={3}
+        >
           {word.translation}
-        </Typography>
-        <Typography variant="h4" textAlign="center" color={typedColor}>
-          {typedWord || ' '}
         </Typography>
       </Box>
       <Grid container spacing={2} pt={4}>
         <Grid item xs={12}>
-          <Box mb={3} display="flex" alignItems="center" justifyContent="center" flexWrap="wrap">
-            {letters.map((letter, i) => (
-              <Box
-                key={i}
-                m={0.5}
-                onClick={() => setTypedWord(`${typedWord}${letter.toLowerCase()}`)}
-              >
-                <Button disabled={status !== undefined} size="large" variant="outlined">
-                  {letter}
-                </Button>
-              </Box>
-            ))}
-          </Box>
-        </Grid>
-        <Grid item xs={12}>
-          <Button
+          <WordTypeTextField
+            value={formik.values.word}
             fullWidth
-            disabled={status !== undefined || !typedWord.length}
-            onClick={() =>
-              setTypedWord((prevState) => prevState.substring(0, prevState.length - 1))
-            }
-          >
-            Стерти
-          </Button>
+            disabled={typedWord !== undefined}
+            status={status}
+            onChange={formik.handleChange}
+            name="word"
+          />
         </Grid>
         <Grid item xs={6}>
           {!status && (
@@ -134,14 +115,16 @@ const WordType: FC<WordTypeProps> = ({ word, onError, onSuccess }) => {
           )}
         </Grid>
         <Grid item xs={6}>
-          <Button
-            variant="contained"
-            fullWidth
-            disabled={typedWord.length < word.word.length}
-            onClick={nextWord}
-          >
-            Наступне слово
-          </Button>
+          {typedWord === undefined && (
+            <Button variant="contained" fullWidth type="submit">
+              Перевірити
+            </Button>
+          )}
+          {typedWord !== undefined && (
+            <Button variant="contained" fullWidth onClick={nextWord}>
+              Наступне слово
+            </Button>
+          )}
         </Grid>
       </Grid>
     </Box>

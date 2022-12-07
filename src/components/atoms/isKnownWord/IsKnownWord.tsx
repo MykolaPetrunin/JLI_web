@@ -35,10 +35,19 @@ const IsKnownWord: FC<IsKnownWordProps> = ({ word, onStudy, onKnow }) => {
         flexDirection="column"
         py={5}
       >
-        <Typography variant="h3" textAlign="center" mb={3}>
+        <Typography
+          variant="h3"
+          textAlign="center"
+          style={{ hyphens: 'auto', wordBreak: 'break-word' }}
+          mb={3}
+        >
           {word.word}
         </Typography>
-        <Typography variant="h4" textAlign="center">
+        <Typography
+          variant="h4"
+          textAlign="center"
+          style={{ hyphens: 'auto', wordBreak: 'break-word' }}
+        >
           {word.translation}
         </Typography>
       </Box>

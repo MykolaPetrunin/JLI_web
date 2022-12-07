@@ -79,7 +79,11 @@ const WordSelect: FC<WordSelectProps> = ({ word, questionKey, resKey, onError, o
         flexDirection="column"
         py={5}
       >
-        <Typography variant="h4" textAlign="center">
+        <Typography
+          variant="h4"
+          style={{ hyphens: 'auto', wordBreak: 'break-word' }}
+          textAlign="center"
+        >
           {word[questionKey]}
         </Typography>
       </Box>
@@ -88,6 +92,7 @@ const WordSelect: FC<WordSelectProps> = ({ word, questionKey, resKey, onError, o
           <Grid item xs={6} key={heapWord.id} display="flex">
             <Button
               color={wordColor(heapWord)}
+              style={{ hyphens: 'auto', wordBreak: 'break-word' }}
               variant={
                 heapWord.id === rightWord?.id || heapWord.id === selectedWord?.id
                   ? 'contained'
