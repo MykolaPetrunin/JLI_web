@@ -120,12 +120,11 @@ const WordType: FC<WordTypeProps> = ({ word, onError, onSuccess }) => {
               Перевірити
             </Button>
           )}
-          {typedWord !== undefined ||
-            (status !== undefined && (
-              <Button variant="contained" fullWidth onClick={nextWord}>
-                Наступне слово
-              </Button>
-            ))}
+          {(typedWord !== undefined || status !== undefined) && (
+            <Button variant="contained" fullWidth onClick={nextWord}>
+              Наступне слово
+            </Button>
+          )}
         </Grid>
       </Grid>
     </Box>
