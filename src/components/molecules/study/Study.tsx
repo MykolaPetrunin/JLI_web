@@ -166,7 +166,9 @@ const Study: FC<StudyProps> = ({
       px={2}
       py={3}
     >
-      <Typography variant="h4">У вас немає слів до вичення</Typography>
+      <Typography variant="h4" textAlign="center">
+        У вас немає слів до вичення
+      </Typography>
     </Box>
   );
 };

@@ -96,7 +96,7 @@ const WordType: FC<WordTypeProps> = ({ word, onError, onSuccess }) => {
           <WordTypeTextField
             value={formik.values.word}
             fullWidth
-            disabled={typedWord !== undefined}
+            disabled={typedWord !== undefined || status !== undefined}
             status={status}
             onChange={formik.handleChange}
             name="word"
@@ -115,16 +115,17 @@ const WordType: FC<WordTypeProps> = ({ word, onError, onSuccess }) => {
           )}
         </Grid>
         <Grid item xs={6}>
-          {typedWord === undefined && (
+          {typedWord === undefined && status === undefined && (
             <Button variant="contained" fullWidth type="submit">
               Перевірити
             </Button>
           )}
-          {typedWord !== undefined && (
-            <Button variant="contained" fullWidth onClick={nextWord}>
-              Наступне слово
-            </Button>
-          )}
+          {typedWord !== undefined ||
+            (status !== undefined && (
+              <Button variant="contained" fullWidth onClick={nextWord}>
+                Наступне слово
+              </Button>
+            ))}
         </Grid>
       </Grid>
     </Box>

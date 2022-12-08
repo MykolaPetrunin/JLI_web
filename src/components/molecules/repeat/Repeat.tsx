@@ -40,7 +40,9 @@ const Repeat: FC<RepeatProps> = (props) => {
         px={2}
         py={3}
       >
-        <Typography variant="h4">У вас немає слів до повтору</Typography>
+        <Typography variant="h4" textAlign="center">
+          У вас немає слів до повтору
+        </Typography>
       </Box>
     );
 
@@ -51,7 +53,7 @@ const Repeat: FC<RepeatProps> = (props) => {
         props.onNextStep(word, step);
       }}
       onError={(word) => {
-        props.onKnow(word, 'wordsSpell', false);
+        props.onKnow(word, step, false);
       }}
     />
   );

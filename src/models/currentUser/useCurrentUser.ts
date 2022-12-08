@@ -1,6 +1,7 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import CurrentUserContext from '@store/currentUser/CurrentUserContext';
 import { setCurrentUser } from '@store/currentUser/currentUserActions';
+import { shuffle } from 'lodash';
 import { useContext } from 'react';
 
 import useAddCollectionToStudyMutation from '@api/mutations/useAddCollectionToStudyMutation';
@@ -82,8 +83,12 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
       ...currentUser,
       [currentStep]: currentUser[currentStep].filter(({ id }) => id !== word.id),
     };
+
     if (!isKnown) {
-      newUser.wordsWordTranslation = [...newUser.wordsWordTranslation, word];
+      newUser.wordsWordTranslation = [
+        ...newUser.wordsWordTranslation,
+        { ...word, heap: shuffle(word.heap) },
+      ];
     }
 
     dispatchCurrentUserState(setCurrentUser(newUser));
@@ -102,7 +107,7 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
     };
 
     if (nextStep !== 'words') {
-      newUser[nextStep] = [...newUser[nextStep], word];
+      newUser[nextStep] = [...newUser[nextStep], { ...word, heap: shuffle(word.heap) }];
     }
 
     dispatchCurrentUserState(setCurrentUser(newUser));
