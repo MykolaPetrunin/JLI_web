@@ -9,7 +9,7 @@ import useSetKnownMutation from '@api/mutations/useSetKnownMutation';
 import useSetWordNextStepMutation from '@api/mutations/useSetWordNextStepMutation';
 import useUpdateUserMutation from '@api/mutations/useUpdateUserMutation';
 import useUploadImageMutation from '@api/mutations/useUploadImageMutation';
-import useCurrentUserQuery from '@api/queries/useCurrentUserQuery';
+import useCurrentUserQueryOld from '@api/queries/useCurrentUserQueryOld';
 
 import Word from '@models/collection/interfaces/word';
 import User from '@models/currentUser/interfaces/user';
@@ -38,6 +38,7 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
   } = useContext(CurrentUserContext);
 
   const { logout } = useAuth0();
+
   const { fetch: uploadImage } = useUploadImageMutation();
   const { fetch: updateUserMutation } = useUpdateUserMutation();
   const { fetch: setKnownMutation } = useSetKnownMutation();
@@ -45,7 +46,7 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
   const { fetch: addCollectionToStudyMutation, isLoading: isAddingCollectionToStudy } =
     useAddCollectionToStudyMutation();
 
-  const { isLoading: isCurrentUserLoading, fetch: fetchCurrentUserQuery } = useCurrentUserQuery();
+  const { isLoading: isCurrentUserLoading, fetch: fetchCurrentUserQuery } = useCurrentUserQueryOld();
 
   const updateUser = async (val: UpdatedUser): Promise<void> => {
     let imageId = '';

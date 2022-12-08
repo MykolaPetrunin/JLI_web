@@ -12,7 +12,7 @@ interface UseUserSettingsQueryRes {
   user: User;
 }
 
-const useCurrentUserQuery: () => QueryRes<UseUserSettingsQueryRes> = () => {
+const useCurrentUserQueryOld: () => QueryRes<UseUserSettingsQueryRes> = () => {
   return useQuery<UseUserSettingsQueryRes>(async () => {
     const res = await Api.get<Res<UserRes>>(ApiPaths.CurrentUserGet);
     return {
@@ -21,4 +21,4 @@ const useCurrentUserQuery: () => QueryRes<UseUserSettingsQueryRes> = () => {
   });
 };
 
-export default useCurrentUserQuery;
+export default useCurrentUserQueryOld;
