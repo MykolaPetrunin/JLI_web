@@ -1,7 +1,8 @@
+import { UseMutationResult, useMutation } from '@tanstack/react-query';
+
 import ApiPaths from '@api/config/apiPaths';
-import QueryRes from '@api/interfaces/queryRes';
+import ApiKeys from '@api/enums/apiKeys';
 import Res from '@api/interfaces/res';
-import useQuery from '@api/queries/useQuery';
 import Api from '@api/services/api';
 
 import Collection from '@models/collection/interfaces/collection';
@@ -20,12 +21,14 @@ interface UseCreateCollectionMutationProps {
   isPrivate: boolean;
 }
 
-const useCreateCollectionMutation: () => QueryRes<
+const useCreateCollectionMutation: () => UseMutationResult<
   UseCreateCollectionMutationRes,
+  unknown,
   UseCreateCollectionMutationProps
 > = () => {
-  return useQuery<UseCreateCollectionMutationRes, UseCreateCollectionMutationProps>(
-    async (body): Promise<UseCreateCollectionMutationRes> => {
+  return useMutation({
+    mutationKey: [ApiKeys.CreateCollection],
+    mutationFn: async (body): Promise<UseCreateCollectionMutationRes> => {
       const res = await Api.post<Res<Collection>, UseCreateCollectionMutationProps>({
         url: ApiPaths.CollectionsCreate,
         body,
@@ -35,7 +38,7 @@ const useCreateCollectionMutation: () => QueryRes<
         collection: res.data.data,
       };
     },
-  );
+  });
 };
 
 export default useCreateCollectionMutation;

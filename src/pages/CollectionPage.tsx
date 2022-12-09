@@ -41,7 +41,6 @@ const CollectionPage: FC = () => {
   const {
     collection,
     isCollectionLoading,
-    fetchCollection,
     isUnauthorized,
     isCollectionCreating,
     isCollectionUpdating,
@@ -51,10 +50,6 @@ const CollectionPage: FC = () => {
     collectionId,
   });
   const { currentUser, addCollectionToStudy, isAddingCollectionToStudy } = useCurrentUser();
-
-  useEffect(() => {
-    fetchCollection().then();
-  }, []);
 
   useEffect(() => {
     if (!currentUser) return;

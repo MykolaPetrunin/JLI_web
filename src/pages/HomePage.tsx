@@ -21,11 +21,9 @@ const HomePage: FC = () => {
   const navigate = useNavigate();
   const mainMenuProps = useMainMenu();
   const { currentUser } = useCurrentUser();
-  const { fetchCollections, collections, isCollectionsLoading } = useCollection({});
+  const { collections, isCollectionsLoading } = useCollection({});
 
-  const { shareCollection, openCollection } = useCollectionsPage({
-    fetchCollections,
-  });
+  const { shareCollection, openCollection } = useCollectionsPage();
 
   const words = useMemo<{ toStudy: number; toRepeat: number }>(
     () => ({

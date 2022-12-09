@@ -1,8 +1,9 @@
+import { UseMutationResult, useMutation } from '@tanstack/react-query';
+
 import ApiPaths from '@api/config/apiPaths';
+import ApiKeys from '@api/enums/apiKeys';
 import MoveWordsByStepsRes from '@api/interfaces/moveWordsByStepsRes';
-import QueryRes from '@api/interfaces/queryRes';
 import Res from '@api/interfaces/res';
-import useQuery from '@api/queries/useQuery';
 import Api from '@api/services/api';
 import resToWord from '@api/utils/resToWord';
 
@@ -19,12 +20,14 @@ interface UseSetKnownMutationProps {
   isKnown: boolean;
 }
 
-const useSetKnownMutation: () => QueryRes<
+const useSetKnownMutation: () => UseMutationResult<
   UseSetKnownMutationRes,
+  unknown,
   UseSetKnownMutationProps
 > = () => {
-  return useQuery<UseSetKnownMutationRes, UseSetKnownMutationProps>(
-    async (body): Promise<UseSetKnownMutationRes> => {
+  return useMutation({
+    mutationKey: [ApiKeys.SetKnownMutation],
+    mutationFn: async (body): Promise<UseSetKnownMutationRes> => {
       const res = await Api.post<Res<MoveWordsByStepsRes>, UseSetKnownMutationProps>({
         url: ApiPaths.UserWordSetKnown,
         body,
@@ -37,7 +40,7 @@ const useSetKnownMutation: () => QueryRes<
         })),
       };
     },
-  );
+  });
 };
 
 export default useSetKnownMutation;

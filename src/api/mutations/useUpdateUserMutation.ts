@@ -1,7 +1,8 @@
+import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query';
+
 import ApiPaths from '@api/config/apiPaths';
-import QueryRes from '@api/interfaces/queryRes';
+import ApiKeys from '@api/enums/apiKeys';
 import Res from '@api/interfaces/res';
-import useQuery from '@api/queries/useQuery';
 import Api from '@api/services/api';
 
 import User from '@models/currentUser/interfaces/user';
@@ -20,12 +21,15 @@ interface UseUpdateUserMutationProps {
   body: UpdateUserBody;
 }
 
-const useUpdateUserMutation: () => QueryRes<
+const useUpdateUserMutation: () => UseMutationResult<
   UseUpdateUserMutationRes,
+  unknown,
   UseUpdateUserMutationProps
 > = () => {
-  return useQuery<UseUpdateUserMutationRes, UseUpdateUserMutationProps>(
-    async ({ body }): Promise<UseUpdateUserMutationRes> => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ body }): Promise<UseUpdateUserMutationRes> => {
       const res = await Api.patch<Res<User>, UpdateUserBody>({
         url: ApiPaths.UserUpdate,
         body,
@@ -33,7 +37,13 @@ const useUpdateUserMutation: () => QueryRes<
 
       return { user: res.data.data };
     },
-  );
+    mutationKey: [ApiKeys.UpdateUser],
+    onSuccess: (data) => {
+      queryClient.setQueryData([ApiKeys.CurrentUserKey], (user) =>
+        user ? { ...user, ...data.user } : undefined,
+      );
+    },
+  });
 };
 
 export default useUpdateUserMutation;

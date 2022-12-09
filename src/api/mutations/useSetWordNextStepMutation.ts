@@ -1,8 +1,9 @@
+import { UseMutationResult, useMutation } from '@tanstack/react-query';
+
 import ApiPaths from '@api/config/apiPaths';
+import ApiKeys from '@api/enums/apiKeys';
 import MoveWordsByStepsRes from '@api/interfaces/moveWordsByStepsRes';
-import QueryRes from '@api/interfaces/queryRes';
 import Res from '@api/interfaces/res';
-import useQuery from '@api/queries/useQuery';
 import Api from '@api/services/api';
 import resToWord from '@api/utils/resToWord';
 
@@ -18,12 +19,14 @@ interface UseSetWordNextStepMutationProps {
   wordId: string;
 }
 
-const useSetWordNextStepMutation: () => QueryRes<
+const useSetWordNextStepMutation: () => UseMutationResult<
   UseSetWordNextStepMutationRes,
+  unknown,
   UseSetWordNextStepMutationProps
 > = () => {
-  return useQuery<UseSetWordNextStepMutationRes, UseSetWordNextStepMutationProps>(
-    async (body): Promise<UseSetWordNextStepMutationRes> => {
+  return useMutation({
+    mutationKey: [ApiKeys.SetWordNextStep],
+    mutationFn: async (body): Promise<UseSetWordNextStepMutationRes> => {
       const res = await Api.post<Res<MoveWordsByStepsRes>, UseSetWordNextStepMutationProps>({
         url: ApiPaths.UserWordSetNextStep,
         body,
@@ -36,7 +39,7 @@ const useSetWordNextStepMutation: () => QueryRes<
         })),
       };
     },
-  );
+  });
 };
 
 export default useSetWordNextStepMutation;

@@ -1,7 +1,8 @@
+import { UseMutationResult, useMutation } from '@tanstack/react-query';
+
 import ApiPaths from '@api/config/apiPaths';
-import QueryRes from '@api/interfaces/queryRes';
+import ApiKeys from '@api/enums/apiKeys';
 import Res from '@api/interfaces/res';
-import useQuery from '@api/queries/useQuery';
 import Api from '@api/services/api';
 
 interface UseUploadImageMutationRes {
@@ -12,12 +13,14 @@ interface UseUploadImageMutationProps {
   image: string;
 }
 
-const useUploadImageMutation: () => QueryRes<
+const UseUploadImageMutation: () => UseMutationResult<
   UseUploadImageMutationRes,
+  unknown,
   UseUploadImageMutationProps
 > = () => {
-  return useQuery<UseUploadImageMutationRes, UseUploadImageMutationProps>(
-    async ({ image }): Promise<UseUploadImageMutationRes> => {
+  return useMutation({
+    mutationKey: [ApiKeys.UploadUserImage],
+    mutationFn: async ({ image }): Promise<UseUploadImageMutationRes> => {
       const bodyFormData: FormData = new FormData();
       bodyFormData.append('file', image);
 
@@ -29,7 +32,7 @@ const useUploadImageMutation: () => QueryRes<
 
       return res.data.data;
     },
-  );
+  });
 };
 
-export default useUploadImageMutation;
+export default UseUploadImageMutation;

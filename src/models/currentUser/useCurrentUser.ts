@@ -1,17 +1,20 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import CurrentUserContext from '@store/currentUser/CurrentUserContext';
-import { setCurrentUser } from '@store/currentUser/currentUserActions';
+import { useQueryClient } from '@tanstack/react-query';
 import { shuffle } from 'lodash';
 import { useContext } from 'react';
 
+import ApiKeys from '@api/enums/apiKeys';
 import useAddCollectionToStudyMutation from '@api/mutations/useAddCollectionToStudyMutation';
 import useSetKnownMutation from '@api/mutations/useSetKnownMutation';
 import useSetWordNextStepMutation from '@api/mutations/useSetWordNextStepMutation';
+import useUpdateSettingsMutation from '@api/mutations/useUpdateSettingsMutation';
 import useUpdateUserMutation from '@api/mutations/useUpdateUserMutation';
 import useUploadImageMutation from '@api/mutations/useUploadImageMutation';
 import useCurrentUserQuery from '@api/queries/useCurrentUserQuery';
 
 import Word from '@models/collection/interfaces/word';
+import Settings from '@models/currentUser/interfaces/settings';
 import User from '@models/currentUser/interfaces/user';
 import WordSteps from '@models/currentUser/interfaces/wordSteps';
 import getNextStep from '@models/currentUser/utils/getNextStep';
@@ -21,7 +24,7 @@ type UpdatedUser = Pick<User, 'picture' | 'firstName' | 'lastName'>;
 interface UseCurrentUserRes {
   userId?: string;
   currentUser?: User;
-  fetchCurrentUser: () => Promise<void>;
+  updateSettings: (val: Settings) => Promise<Settings>;
   logout: () => void;
   updateUser: (val: UpdatedUser) => Promise<void>;
   setKnownWord: (word: Word, currentStep: WordSteps, isKnown: boolean) => Promise<void>;
@@ -34,19 +37,25 @@ interface UseCurrentUserRes {
 const useCurrentUser: () => UseCurrentUserRes = () => {
   const {
     currentUserState: { userId },
-    dispatchCurrentUserState,
   } = useContext(CurrentUserContext);
 
   const { logout } = useAuth0();
+  const queryClient = useQueryClient();
 
-  const { fetch: uploadImage } = useUploadImageMutation();
-  const { fetch: updateUserMutation } = useUpdateUserMutation();
-  const { fetch: setKnownMutation } = useSetKnownMutation();
-  const { fetch: setWordNextStepMutation } = useSetWordNextStepMutation();
-  const { fetch: addCollectionToStudyMutation, isLoading: isAddingCollectionToStudy } =
+  const { mutateAsync: uploadImage } = useUploadImageMutation();
+  const { mutateAsync: updateUserMutation } = useUpdateUserMutation();
+  const { mutateAsync: setKnownMutation } = useSetKnownMutation();
+  const { mutateAsync: setWordNextStepMutation } = useSetWordNextStepMutation();
+  const { mutateAsync: updateSettingsMutation, isLoading: isUpdating } =
+    useUpdateSettingsMutation();
+  const { mutateAsync: addCollectionToStudyMutation, isLoading: isAddingCollectionToStudy } =
     useAddCollectionToStudyMutation();
 
-  const { data: currentUser, isLoading: isCurrentUserLoading } = useCurrentUserQuery();
+  const {
+    data: currentUser,
+    isLoading: isCurrentUserLoading,
+    isFetching: isCurrentUserFetching,
+  } = useCurrentUserQuery();
 
   const updateUser = async (val: UpdatedUser): Promise<void> => {
     let imageId = '';
@@ -56,17 +65,9 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
       imageId = res.imageId;
     }
 
-    const res = await updateUserMutation({
+    await updateUserMutation({
       body: { ...val, ...(imageId !== '' ? { picture: imageId } : {}) },
     });
-
-    dispatchCurrentUserState(setCurrentUser(res.user));
-  };
-
-  const fetchCurrentUser = async (): Promise<void> => {
-    const res = await fetchCurrentUserQuery({});
-
-    dispatchCurrentUserState(setCurrentUser(res.user));
   };
 
   const addCollectionToStudy = async (collectionId: string): Promise<void> => {
@@ -82,7 +83,7 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
 
     const newUser = {
       ...currentUser,
-      [currentStep]: currentUser[currentStep].filter(({ id }) => id !== word.id),
+      [currentStep]: currentUser[currentStep].filter(({ id }: Word) => id !== word.id),
     };
 
     if (!isKnown) {
@@ -92,9 +93,15 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
       ];
     }
 
-    dispatchCurrentUserState(setCurrentUser(newUser));
+    queryClient.setQueryData([ApiKeys.CurrentUserKey], newUser);
 
     await setKnownMutation({ isKnown, wordId: word.id, currentStep });
+  };
+
+  const updateSettings = async (val: Settings): Promise<Settings> => {
+    const { settings } = await updateSettingsMutation({ settings: val });
+
+    return settings;
   };
 
   const setWordNextStep = async (word: Word, currentStep: WordSteps): Promise<void> => {
@@ -104,14 +111,14 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
 
     const newUser = {
       ...currentUser,
-      [currentStep]: currentUser[currentStep].filter(({ id }) => id !== word.id),
+      [currentStep]: currentUser[currentStep].filter(({ id }: Word) => id !== word.id),
     };
 
     if (nextStep !== 'words') {
       newUser[nextStep] = [...newUser[nextStep], { ...word, heap: shuffle(word.heap) }];
     }
 
-    dispatchCurrentUserState(setCurrentUser(newUser));
+    queryClient.setQueryData([ApiKeys.CurrentUserKey], newUser);
 
     await setWordNextStepMutation({ wordId: word.id, currentStep });
   };
@@ -121,10 +128,10 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
     logout,
     currentUser,
     updateUser,
-    fetchCurrentUser,
+    updateSettings,
     addCollectionToStudy,
     isAddingCollectionToStudy,
-    isCurrentUserLoading,
+    isCurrentUserLoading: isCurrentUserFetching || isCurrentUserLoading || isUpdating,
     setKnownWord,
     setWordNextStep,
   };

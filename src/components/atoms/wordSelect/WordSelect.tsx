@@ -88,29 +88,31 @@ const WordSelect: FC<WordSelectProps> = ({ word, questionKey, resKey, onError, o
         </Typography>
       </Box>
       <Grid container spacing={2}>
-        {(word.heap || []).map((heapWord) => (
-          <Grid item xs={6} key={heapWord.id} display="flex">
-            <Button
-              color={wordColor(heapWord)}
-              variant={
-                heapWord.id === rightWord?.id || heapWord.id === selectedWord?.id
-                  ? 'contained'
-                  : 'outlined'
-              }
-              size="small"
-              fullWidth
-              onClick={() => heapItemClickHandler(heapWord)}
-            >
-              <Typography
-                variant="button"
-                textTransform="none"
-                style={{ hyphens: 'auto', wordBreak: 'break-word' }}
+        {(word.heap || []).map((heapWord) => {
+          return (
+            <Grid item xs={6} key={`${word.id}_${heapWord.id}`} display="flex">
+              <Button
+                color={wordColor(heapWord)}
+                variant={
+                  heapWord.id === rightWord?.id || heapWord.id === selectedWord?.id
+                    ? 'contained'
+                    : 'outlined'
+                }
+                size="small"
+                fullWidth
+                onClick={() => heapItemClickHandler(heapWord)}
               >
-                {heapWord[resKey]}
-              </Typography>
-            </Button>
-          </Grid>
-        ))}
+                <Typography
+                  variant="button"
+                  textTransform="none"
+                  style={{ hyphens: 'auto', wordBreak: 'break-word' }}
+                >
+                  {heapWord[resKey]}
+                </Typography>
+              </Button>
+            </Grid>
+          );
+        })}
         <Grid item xs={12}>
           <Grid container spacing={2} pt={4}>
             <Grid item xs={6}>

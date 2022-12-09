@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Collection from '@models/collection/interfaces/collection';
@@ -10,18 +9,8 @@ interface UseCollectionsPageRes {
   openCollection: (collection: Collection) => void;
 }
 
-interface UseCollectionsPageProps {
-  fetchCollections: () => Promise<Collection[]>;
-}
-
-const useCollectionsPage: (props: UseCollectionsPageProps) => UseCollectionsPageRes = ({
-  fetchCollections,
-}) => {
+const useCollectionsPage: () => UseCollectionsPageRes = () => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    fetchCollections().then();
-  }, []);
 
   const shareCollection = (collection: Collection) => {
     navigator

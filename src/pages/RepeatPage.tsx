@@ -13,8 +13,7 @@ import Repeat from '@molecules/repeat/Repeat';
 
 const RepeatPage: FC = () => {
   const mainMenuProps = useMainMenu();
-  const { currentUser, isCurrentUserLoading, setKnownWord, setWordNextStep } =
-    useCurrentUser();
+  const { currentUser, isCurrentUserLoading, setKnownWord, setWordNextStep } = useCurrentUser();
 
   return (
     <MainPageTemplate header={<Header />} footer={<MainMenu {...mainMenuProps} />}>

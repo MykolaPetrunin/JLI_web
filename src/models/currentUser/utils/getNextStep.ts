@@ -1,6 +1,6 @@
 import wordStepsList from '@models/currentUser/config/wordStepsList';
+import Settings from '@models/currentUser/interfaces/settings';
 import WordSteps from '@models/currentUser/interfaces/wordSteps';
-import Settings from '@models/settings/interfaces/settings';
 
 const getNextStep = (currentStep: WordSteps, settings: Settings): WordSteps => {
   const nextStep = wordStepsList[wordStepsList.indexOf(currentStep) + 1];

@@ -9,11 +9,9 @@ import CollectionPageTemplate from '@templates/collectionPageTemplate/Collection
 
 const CollectionsPage: FC = () => {
   const mainMenuProps = useMainMenu();
-  const { fetchCollections, collections, isCollectionsLoading } = useCollection({});
+  const { collections, isCollectionsLoading } = useCollection({});
 
-  const { shareCollection, openCollection } = useCollectionsPage({
-    fetchCollections,
-  });
+  const { shareCollection, openCollection } = useCollectionsPage();
 
   return (
     <CollectionPageTemplate

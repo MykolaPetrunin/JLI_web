@@ -1,5 +1,5 @@
 import Word from '@models/collection/interfaces/word';
-import Settings from '@models/settings/interfaces/settings';
+import Settings from '@models/currentUser/interfaces/settings';
 
 interface User {
   id: string;

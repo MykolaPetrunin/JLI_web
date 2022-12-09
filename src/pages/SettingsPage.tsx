@@ -2,9 +2,9 @@ import React, { FC } from 'react';
 
 import { Box, CircularProgress } from '@mui/material';
 
+import useCurrentUser from '@models/currentUser/useCurrentUser';
 import useMainMenu from '@models/mainMenu/useMainMenu';
 import useProfileMenu from '@models/profileMenu/useProfileMenu';
-import useSettings from '@models/settings/useSettings';
 
 import MainPageTemplate from '@templates/mainPageTemplate/MainPageTemplate';
 
@@ -17,16 +17,20 @@ const SettingsPage: FC = () => {
   const mainMenuProps = useMainMenu();
   const profileMenuProps = useProfileMenu();
 
-  const { settings, updateSettings, isUpdating } = useSettings();
+  const { currentUser, isCurrentUserLoading, updateSettings } = useCurrentUser();
 
   return (
     <MainPageTemplate header={<Header />} footer={<MainMenu {...mainMenuProps} />}>
       <Tabs {...profileMenuProps} />
       <Box display="flex" alignItems="center" flexDirection="column" my={5}>
-        {!settings && <CircularProgress />}
+        {!currentUser && <CircularProgress />}
 
-        {settings && (
-          <SettingsEdit value={settings} onChange={updateSettings} isUpdating={isUpdating} />
+        {currentUser && (
+          <SettingsEdit
+            value={currentUser.settings}
+            onChange={updateSettings}
+            isUpdating={isCurrentUserLoading}
+          />
         )}
       </Box>
     </MainPageTemplate>

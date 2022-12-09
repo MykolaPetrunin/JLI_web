@@ -4,7 +4,7 @@ import Res from '@api/interfaces/res';
 import useQuery from '@api/queries/useQuery';
 import Api from '@api/services/api';
 
-import Settings from '@models/settings/interfaces/settings';
+import Settings from '@models/currentUser/interfaces/settings';
 
 interface UseSettingsQueryRes {
   settings: Settings;

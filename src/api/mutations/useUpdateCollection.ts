@@ -1,7 +1,8 @@
+import { UseMutationResult, useMutation } from '@tanstack/react-query';
+
 import ApiPaths from '@api/config/apiPaths';
-import QueryRes from '@api/interfaces/queryRes';
+import ApiKeys from '@api/enums/apiKeys';
 import Res from '@api/interfaces/res';
-import useQuery from '@api/queries/useQuery';
 import Api from '@api/services/api';
 
 import Collection from '@models/collection/interfaces/collection';
@@ -22,12 +23,14 @@ interface UseUpdateCollectionMutationProps {
   isPrivate?: boolean;
 }
 
-const useUpdateCollectionMutation: () => QueryRes<
+const useUpdateCollectionMutation: () => UseMutationResult<
   UseUpdateCollectionMutationRes,
+  unknown,
   UseUpdateCollectionMutationProps
 > = () => {
-  return useQuery<UseUpdateCollectionMutationRes, UseUpdateCollectionMutationProps>(
-    async (body): Promise<UseUpdateCollectionMutationRes> => {
+  return useMutation({
+    mutationKey: [ApiKeys.UpdateCollection],
+    mutationFn: async (body): Promise<UseUpdateCollectionMutationRes> => {
       const res = await Api.patch<Res<Collection>, UseUpdateCollectionMutationProps>({
         url: `${ApiPaths.CollectionsUpdate}/${body.id}`,
         body,
@@ -37,7 +40,7 @@ const useUpdateCollectionMutation: () => QueryRes<
         collection: res.data.data,
       };
     },
-  );
+  });
 };
 
 export default useUpdateCollectionMutation;

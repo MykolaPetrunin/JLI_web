@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import useCreateCollectionMutation from '@api/mutations/useCreateCollection';
 import useDeleteCollectionMutation from '@api/mutations/useDeleteCollectionMutation';
@@ -15,8 +15,6 @@ interface UseCollectionRes {
   collections: Collection[];
   createCollection: (val: CreateCollectionInput) => Promise<Collection>;
   updateCollection: (updatedCollection: UpdateCollectionInput) => Promise<Collection>;
-  fetchCollections: () => Promise<Collection[]>;
-  fetchCollection: () => Promise<Collection | undefined>;
   deleteCollection: (collectionId: string) => Promise<string>;
   isCollectionsLoading: boolean;
   isCollectionLoading: boolean;
@@ -35,38 +33,23 @@ const useCollection: (props: UseCollectionProps) => UseCollectionRes = ({
   isMy = false,
   collectionId,
 }) => {
-  const [collections, setCollections] = useState<Collection[]>([]);
-  const [collection, setCollection] = useState<Collection | undefined>();
   const [isUnauthorized, setIsUnauthorized] = useState<boolean>(false);
 
-  const { isLoading: isCollectionsLoading, fetch: fetchCollectionsQuery } = useCollectionsQuery();
-  const { isLoading: isCollectionLoading, fetch: fetchCollectionQuery } = useCollectionQuery();
+  const { isLoading: isCollectionsLoading, data: collectionsData } = useCollectionsQuery({ isMy });
+  const { isLoading: isCollectionLoading, data: collectionData } = useCollectionQuery({
+    collectionId,
+  });
 
-  const { fetch: createCollectionMutation, isLoading: isCollectionCreating } =
+  const { mutateAsync: createCollectionMutation, isLoading: isCollectionCreating } =
     useCreateCollectionMutation();
-  const { fetch: updateCollectionMutation, isLoading: isCollectionUpdating } =
+  const { mutateAsync: updateCollectionMutation, isLoading: isCollectionUpdating } =
     useUpdateCollectionMutation();
-  const { fetch: deleteCollectionMutation, isLoading: isCollectionDeleting } =
+  const { mutateAsync: deleteCollectionMutation, isLoading: isCollectionDeleting } =
     useDeleteCollectionMutation();
 
-  const fetchCollections = async (): Promise<Collection[]> => {
-    const res = await fetchCollectionsQuery({ isMy });
-
-    setCollections(res.collections || []);
-
-    return res.collections || [];
-  };
-
-  const fetchCollection = async (): Promise<Collection | undefined> => {
-    if (!collectionId) return undefined;
-
-    const res = await fetchCollectionQuery({ collectionId });
-
-    setIsUnauthorized(!!res.unauthorized);
-    setCollection(res.collection);
-
-    return res.collection;
-  };
+  useEffect(() => {
+    setIsUnauthorized(!!collectionData?.unauthorized);
+  }, [collectionData]);
 
   const createCollection = async (val: CreateCollectionInput): Promise<Collection> => {
     const res = await createCollectionMutation({ ...val });
@@ -89,11 +72,9 @@ const useCollection: (props: UseCollectionProps) => UseCollectionRes = ({
   };
 
   return {
-    collection,
-    collections,
+    collection: collectionData?.collection,
+    collections: collectionsData?.collections || [],
     createCollection,
-    fetchCollection,
-    fetchCollections,
     deleteCollection,
     updateCollection,
     isCollectionsLoading,

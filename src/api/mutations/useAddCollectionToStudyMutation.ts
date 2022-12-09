@@ -1,7 +1,8 @@
+import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query';
+
 import ApiPaths from '@api/config/apiPaths';
-import QueryRes from '@api/interfaces/queryRes';
+import ApiKeys from '@api/enums/apiKeys';
 import Res from '@api/interfaces/res';
-import useQuery from '@api/queries/useQuery';
 import Api from '@api/services/api';
 
 import User from '@models/currentUser/interfaces/user';
@@ -14,12 +15,16 @@ interface UseAddCollectionToStudyMutationProps {
   collectionId: string;
 }
 
-const useAddCollectionToStudyMutation: () => QueryRes<
+const useAddCollectionToStudyMutation: () => UseMutationResult<
   UseAddCollectionToStudyMutationRes,
+  unknown,
   UseAddCollectionToStudyMutationProps
 > = () => {
-  return useQuery<UseAddCollectionToStudyMutationRes, UseAddCollectionToStudyMutationProps>(
-    async (body): Promise<UseAddCollectionToStudyMutationRes> => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: [ApiKeys.AddCollectionToStudy],
+    mutationFn: async (body): Promise<UseAddCollectionToStudyMutationRes> => {
       const res = await Api.post<Res<User>, { collectionId: string }>({
         url: ApiPaths.UserStudyCollection,
         body,
@@ -29,7 +34,12 @@ const useAddCollectionToStudyMutation: () => QueryRes<
         user: res.data.data,
       };
     },
-  );
+    onSuccess: (data) => {
+      queryClient.setQueryData([ApiKeys.CurrentUserKey], (user) =>
+        user ? { ...user, ...data.user } : undefined,
+      );
+    },
+  });
 };
 
 export default useAddCollectionToStudyMutation;

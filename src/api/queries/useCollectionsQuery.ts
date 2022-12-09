@@ -1,8 +1,9 @@
+import { UseQueryResult, useQuery } from '@tanstack/react-query';
+
 import ApiPaths from '@api/config/apiPaths';
+import ApiKeys from '@api/enums/apiKeys';
 import CollectionQueryRes from '@api/interfaces/collectionQueryRes';
-import QueryRes from '@api/interfaces/queryRes';
 import Res from '@api/interfaces/res';
-import useQuery from '@api/queries/useQuery';
 import Api from '@api/services/api';
 import resToCollection from '@api/utils/resToCollection';
 
@@ -16,18 +17,20 @@ interface UseCollectionsQueryRes {
   collections: Collection[];
 }
 
-const useCollectionsQuery: () => QueryRes<
-  UseCollectionsQueryRes,
-  UseCollectionsQueryProps
-> = () => {
-  return useQuery<UseCollectionsQueryRes, UseCollectionsQueryProps>(async ({ isMy }) => {
-    const res = await Api.get<Res<CollectionQueryRes[]>>(
-      `${ApiPaths.CollectionsGet}${isMy ? '?isMy=true' : ''}`,
-    );
+const useCollectionsQuery: (
+  props: UseCollectionsQueryProps,
+) => UseQueryResult<UseCollectionsQueryRes> = ({ isMy }) => {
+  return useQuery({
+    queryKey: [ApiKeys.GetCollections, isMy],
+    queryFn: async () => {
+      const res = await Api.get<Res<CollectionQueryRes[]>>(
+        `${ApiPaths.CollectionsGet}${isMy ? '?isMy=true' : ''}`,
+      );
 
-    return {
-      collections: res.data.data.map(resToCollection),
-    };
+      return {
+        collections: res.data.data.map(resToCollection),
+      };
+    },
   });
 };
 
