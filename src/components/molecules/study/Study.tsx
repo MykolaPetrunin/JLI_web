@@ -92,7 +92,6 @@ const Study: FC<StudyProps> = ({
 
     setWordsAmount(newWordsAmount);
   }, [wordsAmount]);
-
   if (wordsAmount.wordsToKnow)
     return (
       <IsKnownWord
