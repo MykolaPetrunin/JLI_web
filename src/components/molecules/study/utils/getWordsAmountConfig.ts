@@ -19,9 +19,10 @@ const getWordsLengthConfig: (
 }) => {
   const hasWordsInStudy =
     wordsSpellLength + wordsWordTranslationLength + wordsTranslationWordLength;
+  const lackOfWords = wordsPerDay - hasWordsInStudy >= 0 ? wordsPerDay - hasWordsInStudy : 0;
 
   const wordsToKnow = hasWordsInStudy
-    ? wordsPerDay - hasWordsInStudy
+    ? lackOfWords
     : wordsToKnowLength > wordsPerDay
     ? wordsPerDay
     : wordsToKnowLength;
