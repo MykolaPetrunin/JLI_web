@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo } from 'react';
+import React, { FC, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button, CircularProgress, Grid, Typography } from '@mui/material';
@@ -20,16 +20,12 @@ import AppPaths from '@/config/appPaths';
 const HomePage: FC = () => {
   const navigate = useNavigate();
   const mainMenuProps = useMainMenu();
-  const { currentUser, fetchCurrentUser } = useCurrentUser();
+  const { currentUser } = useCurrentUser();
   const { fetchCollections, collections, isCollectionsLoading } = useCollection({});
 
   const { shareCollection, openCollection } = useCollectionsPage({
     fetchCollections,
   });
-
-  useEffect(() => {
-    fetchCurrentUser().then();
-  }, []);
 
   const words = useMemo<{ toStudy: number; toRepeat: number }>(
     () => ({

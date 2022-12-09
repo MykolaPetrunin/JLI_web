@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 
 import useCurrentUser from '@models/currentUser/useCurrentUser';
 import useMainMenu from '@models/mainMenu/useMainMenu';
@@ -14,14 +14,7 @@ import Study from '@molecules/study/Study';
 const StudyPage: FC = () => {
   const mainMenuProps = useMainMenu();
 
-  const { currentUser, fetchCurrentUser, isCurrentUserLoading, setKnownWord, setWordNextStep } =
-    useCurrentUser();
-
-  useEffect(() => {
-    if (!isCurrentUserLoading) {
-      fetchCurrentUser().then();
-    }
-  }, []);
+  const { currentUser, isCurrentUserLoading, setKnownWord, setWordNextStep } = useCurrentUser();
 
   return (
     <MainPageTemplate header={<Header />} footer={<MainMenu {...mainMenuProps} />}>

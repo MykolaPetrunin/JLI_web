@@ -50,18 +50,15 @@ const CollectionPage: FC = () => {
   } = useCollection({
     collectionId,
   });
-  const { currentUser, fetchCurrentUser, addCollectionToStudy, isAddingCollectionToStudy } =
-    useCurrentUser();
+  const { currentUser, addCollectionToStudy, isAddingCollectionToStudy } = useCurrentUser();
 
   useEffect(() => {
     fetchCollection().then();
   }, []);
 
   useEffect(() => {
-    if (!currentUser) {
-      fetchCurrentUser().then();
-      return;
-    }
+    if (!currentUser) return;
+
     if (!collectionId || !currentUser.collections) return;
 
     setIsCollectionInStudy(currentUser.collections.includes(collectionId));

@@ -9,7 +9,7 @@ import useSetKnownMutation from '@api/mutations/useSetKnownMutation';
 import useSetWordNextStepMutation from '@api/mutations/useSetWordNextStepMutation';
 import useUpdateUserMutation from '@api/mutations/useUpdateUserMutation';
 import useUploadImageMutation from '@api/mutations/useUploadImageMutation';
-import useCurrentUserQueryOld from '@api/queries/useCurrentUserQueryOld';
+import useCurrentUserQuery from '@api/queries/useCurrentUserQuery';
 
 import Word from '@models/collection/interfaces/word';
 import User from '@models/currentUser/interfaces/user';
@@ -33,7 +33,7 @@ interface UseCurrentUserRes {
 
 const useCurrentUser: () => UseCurrentUserRes = () => {
   const {
-    currentUserState: { userId, user: currentUser },
+    currentUserState: { userId },
     dispatchCurrentUserState,
   } = useContext(CurrentUserContext);
 
@@ -46,7 +46,7 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
   const { fetch: addCollectionToStudyMutation, isLoading: isAddingCollectionToStudy } =
     useAddCollectionToStudyMutation();
 
-  const { isLoading: isCurrentUserLoading, fetch: fetchCurrentUserQuery } = useCurrentUserQueryOld();
+  const { data: currentUser, isLoading: isCurrentUserLoading } = useCurrentUserQuery();
 
   const updateUser = async (val: UpdatedUser): Promise<void> => {
     let imageId = '';

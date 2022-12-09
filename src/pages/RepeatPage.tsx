@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 
 import useCurrentUser from '@models/currentUser/useCurrentUser';
 import useMainMenu from '@models/mainMenu/useMainMenu';
@@ -13,14 +13,8 @@ import Repeat from '@molecules/repeat/Repeat';
 
 const RepeatPage: FC = () => {
   const mainMenuProps = useMainMenu();
-  const { currentUser, fetchCurrentUser, isCurrentUserLoading, setKnownWord, setWordNextStep } =
+  const { currentUser, isCurrentUserLoading, setKnownWord, setWordNextStep } =
     useCurrentUser();
-
-  useEffect(() => {
-    if (!isCurrentUserLoading) {
-      fetchCurrentUser().then();
-    }
-  }, []);
 
   return (
     <MainPageTemplate header={<Header />} footer={<MainMenu {...mainMenuProps} />}>

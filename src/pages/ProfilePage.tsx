@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 
 import { Button, CircularProgress, Grid } from '@mui/material';
 
@@ -16,11 +16,7 @@ import Tabs from '@atoms/tabs/Tabs';
 const ProfilePage: FC = () => {
   const mainMenuProps = useMainMenu();
   const profileMenuProps = useProfileMenu();
-  const { currentUser, logout, updateUser, fetchCurrentUser } = useCurrentUser();
-
-  useEffect(() => {
-    fetchCurrentUser().then();
-  }, []);
+  const { currentUser, logout, updateUser } = useCurrentUser();
 
   return (
     <MainPageTemplate header={<Header />} footer={<MainMenu {...mainMenuProps} />}>
