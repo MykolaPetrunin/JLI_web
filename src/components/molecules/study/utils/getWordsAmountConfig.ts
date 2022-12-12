@@ -22,7 +22,9 @@ const getWordsLengthConfig: (
   const lackOfWords = wordsPerDay - hasWordsInStudy >= 0 ? wordsPerDay - hasWordsInStudy : 0;
 
   const wordsToKnow = hasWordsInStudy
-    ? lackOfWords
+    ? wordsToKnowLength
+      ? lackOfWords
+      : 0
     : wordsToKnowLength > wordsPerDay
     ? wordsPerDay
     : wordsToKnowLength;
