@@ -7,6 +7,7 @@ import Word from '@models/collection/interfaces/word';
 import WordSteps from '@models/currentUser/interfaces/wordSteps';
 
 import IsKnownWord from '@atoms/isKnownWord/IsKnownWord';
+import Loader from '@atoms/loader/Loader';
 import WordSelect from '@atoms/wordSelect/WordSelect';
 import WordType from '@atoms/wordType/WordType';
 
@@ -93,8 +94,20 @@ const Study: FC<StudyProps> = ({
     setWordsAmount(newWordsAmount);
   }, [wordsAmount]);
 
+  useEffect(() => {
+    setWordsAmount(
+      getWordsLengthConfig({
+        wordsSpellLength: wordsSpell.length,
+        wordsWordTranslationLength: wordsWordTranslation.length,
+        wordsPerDay,
+        wordsToKnowLength: wordsToKnow.length,
+        wordsTranslationWordLength: wordsTranslationWord.length,
+      }),
+    );
+  }, [wordsPerDay, wordsToKnow, wordsTranslationWord, wordsWordTranslation, wordsSpell]);
+
   if (wordsAmount.wordsToKnow)
-    return (
+    return wordsToKnow[0] ? (
       <IsKnownWord
         word={wordsToKnow[0]}
         onKnow={(word) => {
@@ -106,10 +119,12 @@ const Study: FC<StudyProps> = ({
           decreaseWordAmount('wordsToKnow');
         }}
       />
+    ) : (
+      <Loader />
     );
 
   if (wordsAmount.wordsWordTranslation)
-    return (
+    return wordsWordTranslation[0] ? (
       <WordSelect
         word={wordsWordTranslation[0]}
         questionKey="word"
@@ -123,10 +138,12 @@ const Study: FC<StudyProps> = ({
           decreaseWordAmount('wordsWordTranslation', true);
         }}
       />
+    ) : (
+      <Loader />
     );
 
   if (wordsAmount.wordsTranslationWord)
-    return (
+    return wordsTranslationWord[0] ? (
       <WordSelect
         word={wordsTranslationWord[0]}
         questionKey="translation"
@@ -140,10 +157,12 @@ const Study: FC<StudyProps> = ({
           decreaseWordAmount('wordsTranslationWord', true);
         }}
       />
+    ) : (
+      <Loader />
     );
 
   if (wordsAmount.wordsSpell)
-    return (
+    return wordsSpell[0] ? (
       <WordType
         word={wordsSpell[0]}
         onSuccess={(word) => {
@@ -155,6 +174,8 @@ const Study: FC<StudyProps> = ({
           decreaseWordAmount('wordsSpell', true);
         }}
       />
+    ) : (
+      <Loader />
     );
 
   return (
