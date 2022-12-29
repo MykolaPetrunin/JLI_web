@@ -18,6 +18,7 @@ interface UseSetKnownMutationProps {
   currentStep: WordSteps;
   wordId: string;
   isKnown: boolean;
+  heap?: Word[];
 }
 
 const useSetKnownMutation: () => UseMutationResult<
@@ -27,7 +28,7 @@ const useSetKnownMutation: () => UseMutationResult<
 > = () => {
   return useMutation({
     mutationKey: [ApiKeys.SetKnownMutation],
-    mutationFn: async (body): Promise<UseSetKnownMutationRes> => {
+    mutationFn: async ({ heap, ...body }): Promise<UseSetKnownMutationRes> => {
       const res = await Api.post<Res<MoveWordsByStepsRes>, UseSetKnownMutationProps>({
         url: ApiPaths.UserWordSetKnown,
         body,
@@ -36,7 +37,7 @@ const useSetKnownMutation: () => UseMutationResult<
       return {
         data: res.data.data.map((item) => ({
           step: item.step,
-          words: item.words.map(resToWord()),
+          words: item.words.map(resToWord(heap)),
         })),
       };
     },

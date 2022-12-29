@@ -15,10 +15,10 @@ interface User {
   wordsHeap: Word[];
   wordsSpell: Word[];
   wordsRepeat: Word[];
-  wordsRepeatWeek: Word[];
-  wordsRepeatMonth: Word[];
-  wordsRepeat3Month: Word[];
-  wordsRepeat6Month: Word[];
+  wordsRepeat2: Word[];
+  wordsRepeat3: Word[];
+  wordsRepeat4: Word[];
+  wordsRepeat5: Word[];
   wordsBaggage: number;
 }
 

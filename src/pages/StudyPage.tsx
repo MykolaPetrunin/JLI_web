@@ -23,7 +23,6 @@ const StudyPage: FC = () => {
         <Study
           onNextStep={setWordNextStep}
           onKnow={setKnownWord}
-          wordsPerDay={currentUser.settings.wordsPerDay}
           wordsSpell={currentUser.wordsSpell}
           wordsToKnow={currentUser.wordsToKnow}
           wordsWordTranslation={currentUser.wordsWordTranslation}

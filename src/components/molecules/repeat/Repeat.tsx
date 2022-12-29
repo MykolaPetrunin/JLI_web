@@ -9,10 +9,10 @@ import WordType from '@atoms/wordType/WordType';
 
 interface RepeatProps {
   wordsRepeat: Word[];
-  wordsRepeatWeek: Word[];
-  wordsRepeatMonth: Word[];
-  wordsRepeat3Month: Word[];
-  wordsRepeat6Month: Word[];
+  wordsRepeat2: Word[];
+  wordsRepeat3: Word[];
+  wordsRepeat4: Word[];
+  wordsRepeat5: Word[];
   onKnow: (word: Word, currentStep: WordSteps, isKnown: boolean) => void;
   onNextStep: (word: Word, currentStep: WordSteps) => void;
 }

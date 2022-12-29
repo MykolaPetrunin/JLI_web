@@ -2,7 +2,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import CurrentUserContext from '@store/currentUser/CurrentUserContext';
 import { useQueryClient } from '@tanstack/react-query';
 import { shuffle } from 'lodash';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import ApiKeys from '@api/enums/apiKeys';
 import useAddCollectionToStudyMutation from '@api/mutations/useAddCollectionToStudyMutation';
@@ -18,6 +18,8 @@ import Settings from '@models/currentUser/interfaces/settings';
 import User from '@models/currentUser/interfaces/user';
 import WordSteps from '@models/currentUser/interfaces/wordSteps';
 import getNextStep from '@models/currentUser/utils/getNextStep';
+import getWordsToStudyAmount from '@models/currentUser/utils/getWordsToStudyAmount';
+import updateUserStudy from '@models/currentUser/utils/updateUserStudy';
 
 type UpdatedUser = Pick<User, 'picture' | 'firstName' | 'lastName'>;
 
@@ -35,6 +37,7 @@ interface UseCurrentUserRes {
 }
 
 const useCurrentUser: () => UseCurrentUserRes = () => {
+  const [currentUser, setCurrentUser] = useState<User>();
   const {
     currentUserState: { userId },
   } = useContext(CurrentUserContext);
@@ -52,10 +55,41 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
     useAddCollectionToStudyMutation();
 
   const {
-    data: currentUser,
+    data: currentUserData,
     isLoading: isCurrentUserLoading,
     isFetching: isCurrentUserFetching,
   } = useCurrentUserQuery();
+
+  useEffect(() => {
+    if (!currentUserData) return;
+
+    setCurrentUser({
+      ...currentUserData,
+      ...(currentUser
+        ? {
+            wordsToKnow: currentUser.wordsToKnow,
+            wordsWordTranslation: currentUser.wordsWordTranslation,
+            wordsTranslationWord: currentUser.wordsTranslationWord,
+            wordsSpell: currentUser.wordsSpell,
+          }
+        : updateUserStudy(currentUserData)),
+    });
+  }, [currentUserData]);
+
+  useEffect(() => {
+    if (
+      !currentUser ||
+      !currentUserData ||
+      getWordsToStudyAmount(currentUser) > 0 ||
+      !getWordsToStudyAmount(currentUserData)
+    )
+      return;
+
+    setCurrentUser({
+      ...currentUser,
+      ...updateUserStudy(currentUserData),
+    });
+  }, [currentUser]);
 
   const updateUser = async (val: UpdatedUser): Promise<void> => {
     let imageId = '';
@@ -74,30 +108,6 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
     await addCollectionToStudyMutation({ collectionId });
   };
 
-  const setKnownWord = async (
-    word: Word,
-    currentStep: WordSteps,
-    isKnown: boolean,
-  ): Promise<void> => {
-    if (!currentUser || currentStep === 'words') return;
-
-    const newUser = {
-      ...currentUser,
-      [currentStep]: currentUser[currentStep].filter(({ id }: Word) => id !== word.id),
-    };
-
-    if (!isKnown) {
-      newUser.wordsWordTranslation = [
-        ...newUser.wordsWordTranslation,
-        { ...word, heap: shuffle(word.heap) },
-      ];
-    }
-
-    queryClient.setQueryData([ApiKeys.CurrentUserKey], newUser);
-
-    await setKnownMutation({ isKnown, wordId: word.id, currentStep });
-  };
-
   const updateSettings = async (val: Settings): Promise<Settings> => {
     const { settings } = await updateSettingsMutation({ settings: val });
 
@@ -109,18 +119,94 @@ const useCurrentUser: () => UseCurrentUserRes = () => {
 
     const nextStep = getNextStep(currentStep, currentUser.settings);
 
-    const newUser = {
-      ...currentUser,
-      [currentStep]: currentUser[currentStep].filter(({ id }: Word) => id !== word.id),
-    };
+    // const newUser = {
+    //   ...currentUser,
+    //   [currentStep]: currentUser[currentStep].filter(({ id }: Word) => id !== word.id),
+    //   ...(nextStep !== 'words'
+    //     ? {
+    //         [nextStep]: [...currentUser[nextStep], { ...word, heap: shuffle(word.heap) }],
+    //       }
+    //     : {}),
+    // };
 
-    if (nextStep !== 'words') {
-      newUser[nextStep] = [...newUser[nextStep], { ...word, heap: shuffle(word.heap) }];
+    // if (nextStep !== 'words') {
+    //   newUser[nextStep] = [...newUser[nextStep], { ...word, heap: shuffle(word.heap) }];
+    // }
+
+    if (currentUserData) {
+      queryClient.setQueryData([ApiKeys.CurrentUserKey], {
+        ...currentUserData,
+        [currentStep]: currentUserData[currentStep].filter(({ id }: Word) => id !== word.id),
+        ...(nextStep !== 'words'
+          ? {
+              [nextStep]: [...currentUserData[nextStep], { ...word, heap: shuffle(word.heap) }],
+            }
+          : {}),
+      });
     }
 
-    queryClient.setQueryData([ApiKeys.CurrentUserKey], newUser);
+    setCurrentUser({
+      ...currentUser,
+      [currentStep]: currentUser[currentStep].filter(({ id }: Word) => id !== word.id),
+      ...(nextStep !== 'words'
+        ? {
+            [nextStep]: [...currentUser[nextStep], { ...word, heap: shuffle(word.heap) }],
+          }
+        : {}),
+    });
 
-    await setWordNextStepMutation({ wordId: word.id, currentStep });
+    const res = await setWordNextStepMutation({
+      wordId: word.id,
+      currentStep,
+      heap: currentUser.wordsHeap,
+    });
+
+    queryClient.setQueryData([ApiKeys.CurrentUserKey], {
+      ...currentUserData,
+      ...res.data.reduce(
+        (acc, item) => ({
+          ...acc,
+          [item.step]: item.words,
+        }),
+        {},
+      ),
+    });
+  };
+
+  const setKnownWord = async (
+    word: Word,
+    currentStep: WordSteps,
+    isKnown: boolean,
+  ): Promise<void> => {
+    if (!currentUser || currentStep === 'words') return;
+
+    queryClient.setQueryData([ApiKeys.CurrentUserKey], {
+      ...currentUserData,
+      [currentStep]: currentUser[currentStep].filter(({ id }: Word) => id !== word.id),
+    });
+
+    setCurrentUser({
+      ...currentUser,
+      [currentStep]: currentUser[currentStep].filter(({ id }: Word) => id !== word.id),
+    });
+
+    const res = await setKnownMutation({
+      isKnown,
+      wordId: word.id,
+      currentStep,
+      heap: currentUser.wordsHeap,
+    });
+
+    queryClient.setQueryData([ApiKeys.CurrentUserKey], {
+      ...currentUserData,
+      ...res.data.reduce(
+        (acc, item) => ({
+          ...acc,
+          [item.step]: item.words,
+        }),
+        {},
+      ),
+    });
   };
 
   return {

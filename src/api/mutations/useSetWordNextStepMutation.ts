@@ -17,6 +17,7 @@ interface UseSetWordNextStepMutationRes {
 interface UseSetWordNextStepMutationProps {
   currentStep: WordSteps;
   wordId: string;
+  heap?: Word[];
 }
 
 const useSetWordNextStepMutation: () => UseMutationResult<
@@ -26,7 +27,7 @@ const useSetWordNextStepMutation: () => UseMutationResult<
 > = () => {
   return useMutation({
     mutationKey: [ApiKeys.SetWordNextStep],
-    mutationFn: async (body): Promise<UseSetWordNextStepMutationRes> => {
+    mutationFn: async ({ heap, ...body }): Promise<UseSetWordNextStepMutationRes> => {
       const res = await Api.post<Res<MoveWordsByStepsRes>, UseSetWordNextStepMutationProps>({
         url: ApiPaths.UserWordSetNextStep,
         body,
@@ -35,7 +36,7 @@ const useSetWordNextStepMutation: () => UseMutationResult<
       return {
         data: res.data.data.map((item) => ({
           step: item.step,
-          words: item.words.map(resToWord()),
+          words: item.words.map(resToWord(heap)),
         })),
       };
     },
